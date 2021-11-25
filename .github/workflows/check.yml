@@ -36,6 +36,7 @@ jobs:
 
       - name: Check Build
         run: |
+          cd chain &&
           SKIP_WASM_BUILD=1 cargo check --release
 
       - name: Check Build for Benchmarking
