@@ -24,7 +24,7 @@ import { UserDetailsContext } from '../../context/UserDetailsContext'
 import { useLogoutMutation } from '../../generated/graphql'
 import { useFinalizedBlock, useRouter } from '../../hooks'
 import { logout } from '../../services/auth.service'
-import AddressComponent from '../../ui-components/Address'
+// import AddressComponent from '../../ui-components/Address'
 // import { useFetchLatestBlockNumberQuery } from '../../generated/graphql'
 
 interface Props {
@@ -85,17 +85,17 @@ const MenuBar = ({ className }: Props): JSX.Element => {
     { content: 'Logout', icon: 'sign-out', onClick: handleLogout, to: '/' }
   ]
 
-  const userMenu =
-    currentUser.web3signup && currentUser.defaultAddress ? (
-      <>
-        <AddressComponent address={currentUser.defaultAddress} />
-      </>
-    ) : (
-      <>
-        <Icon name="user circle" inverted />
-        {username}
-      </>
-    )
+  // const userMenu =
+  //   currentUser.web3signup && currentUser.defaultAddress ? (
+  //     <>
+  //       <AddressComponent address={currentUser.defaultAddress} />
+  //     </>
+  //   ) : (
+  //     <>
+  //       <Icon name="user circle" inverted />
+  //       {username}
+  //     </>
+  //   )
 
   const caretIcon = <Icon name="caret down" inverted />
 
@@ -183,9 +183,9 @@ const MenuBar = ({ className }: Props): JSX.Element => {
           <Menu.Item as={NavLink} to="/" className="logo" id="title">
             <img alt="Polkassembly Logo" src={logo} />
           </Menu.Item>
-          {contentItems.map((item, index) => (
-            <Menu.Item as={NavLink} className="desktop_items" key={index} {...item} />
-          ))}
+          {/*{contentItems.map((item, index) => (*/}
+          {/*  <Menu.Item as={NavLink} className="desktop_items" key={index} {...item} />*/}
+          {/*))}*/}
           <Menu.Item className="desktop_items">
             <Dropdown trigger={<>On-chain</>} icon={caretIcon} item={true}>
               <Dropdown.Menu>
@@ -207,23 +207,23 @@ const MenuBar = ({ className }: Props): JSX.Element => {
           ) : null}
           <Menu.Menu position="right">
             <NetworkDropdown />
-            {username ? (
-              <>
-                <Dropdown trigger={userMenu} icon={caretIcon} item={true}>
-                  <Dropdown.Menu>
-                    {loggedInItems.map((item, index) => (
-                      <Menu.Item as={NavLink} key={index} {...item} />
-                    ))}
-                  </Dropdown.Menu>
-                </Dropdown>
-              </>
-            ) : (
-              <>
-                {loggedOutItems.map((item, index) => (
-                  <Menu.Item as={NavLink} className="user_items" key={index} {...item} />
-                ))}
-              </>
-            )}
+            {/*{username ? (*/}
+            {/*  <>*/}
+            {/*    <Dropdown trigger={userMenu} icon={caretIcon} item={true}>*/}
+            {/*      <Dropdown.Menu>*/}
+            {/*        {loggedInItems.map((item, index) => (*/}
+            {/*          <Menu.Item as={NavLink} key={index} {...item} />*/}
+            {/*        ))}*/}
+            {/*      </Dropdown.Menu>*/}
+            {/*    </Dropdown>*/}
+            {/*  </>*/}
+            {/*) : (*/}
+            {/*  <>*/}
+            {/*    {loggedOutItems.map((item, index) => (*/}
+            {/*      <Menu.Item as={NavLink} className="user_items" key={index} {...item} />*/}
+            {/*    ))}*/}
+            {/*  </>*/}
+            {/*)}*/}
           </Menu.Menu>
         </Menu>
       </Responsive>

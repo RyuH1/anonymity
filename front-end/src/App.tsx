@@ -23,10 +23,10 @@ import PostBounty from './screens/BountyPost'
 import Council from './screens/Council'
 import CreatePost from './screens/CreatePost'
 import PostDiscussion from './screens/DiscussionPost'
-import Discussions from './screens/Discussions'
+// import Discussions from './screens/Discussions'
 import Home from './screens/Home'
 import { PrivacyPolicy, TermsAndConditions, TermsOfWebsite } from './screens/LegalDocuments'
-import LoginForm from './screens/LoginForm'
+// import LoginForm from './screens/LoginForm'
 import PostMotion from './screens/MotionPost'
 import Motions from './screens/Motions'
 import NotFound from './screens/NotFound'
@@ -41,7 +41,7 @@ import RequestResetPassword from './screens/RequestResetPassword'
 import ResetPassword from './screens/ResetPassword'
 import Search from './screens/Search'
 import Settings from './screens/Settings'
-import SignupForm from './screens/SignupForm'
+// import SignupForm from './screens/SignupForm'
 import PostTechCommitteeProposal from './screens/TechCommitteeProposalPost'
 import TechCommitteeProposals from './screens/TechCommitteeProposals'
 import PostTip from './screens/TipPost'
@@ -77,18 +77,18 @@ const App = () => {
                             <Route exact path="/">
                               <Home />
                             </Route>
-                            <Route path="/discussions">
-                              <Discussions />
-                            </Route>
-                            <Route path="/login">
-                              <LoginForm />
-                            </Route>
+                            {/*<Route path="/discussions">*/}
+                            {/*  <Discussions />*/}
+                            {/*</Route>*/}
+                            {/*<Route path="/login">*/}
+                            {/*  <LoginForm />*/}
+                            {/*</Route>*/}
                             <Route path="/reset-password">
                               <ResetPassword />
                             </Route>
-                            <Route path="/signup">
-                              <SignupForm />
-                            </Route>
+                            {/*<Route path="/signup">*/}
+                            {/*  <SignupForm />*/}
+                            {/*</Route>*/}
                             <Route path="/post/create">
                               <CreatePost />
                             </Route>
