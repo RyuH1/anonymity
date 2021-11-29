@@ -4,26 +4,21 @@
 
 import BN from 'bn.js'
 import { useContext, useEffect, useMemo, useState } from 'react'
-import { ApiContext } from 'src/context/ApiContext'
 
-export default function () {
-  const [currentBlock, setCurrentBlock] = useState<BN | undefined>(undefined)
+import { ApiContext } from '../context/ApiContext'
+
+const useFinalizedBlock = () => {
+  const [finalizedBlock, setFinalizedBlock] = useState<BN | undefined>()
   const { api, apiReady } = useContext(ApiContext)
 
   useEffect(() => {
-    if (!api) {
-      return
-    }
-
-    if (!apiReady) {
-      return
-    }
+    if (!api || !apiReady) return
 
     let unsubscribe: () => void
 
     api.derive.chain
-      .bestNumber((number) => {
-        setCurrentBlock(number)
+      .bestNumberFinalized((number) => {
+        setFinalizedBlock(number)
       })
       .then((unsub) => {
         unsubscribe = unsub
@@ -33,7 +28,7 @@ export default function () {
     return () => unsubscribe && unsubscribe()
   }, [api, apiReady])
 
-  return useMemo(() => {
-    return currentBlock
-  }, [currentBlock])
+  return useMemo(() => finalizedBlock, [finalizedBlock])
 }
+
+export default useFinalizedBlock

@@ -1,6 +1,7 @@
 // Copyright 2019-2020 @Premiurly/polkassembly authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
+/* eslint-disable max-len */
 
 /**
  * Returns an array of addresses or null
@@ -19,8 +20,8 @@
  * => null
  */
 
-export function decodePostgresArray(pgArray: string): string[]{
-	const addressArray = pgArray.replace(/"|{|}/g, '');
-	const addresses = addressArray.length > 1 ||  !!addressArray[0] ? addressArray.split(',') : [];
-	return addresses;
+export function decodePostgresArray(pgArray: string): string[] {
+  const addressArray = pgArray.replace(/"|{|}/g, '')
+  const addresses = addressArray.length > 1 || !!addressArray[0] ? addressArray.split(',') : []
+  return addresses
 }

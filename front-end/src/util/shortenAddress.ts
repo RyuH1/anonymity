@@ -3,9 +3,9 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 export default (address: string) => {
-	if (!address || address.length < 8) {
-		return address;
-	}
+  if (!address || address.length < 8) {
+    return address
+  }
 
-	return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
-};
+  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`
+}
