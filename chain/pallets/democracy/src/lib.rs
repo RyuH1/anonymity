@@ -607,6 +607,12 @@ pub mod pallet {
 		MaxVotesReached,
 		/// Maximum number of proposals reached.
 		TooManyProposals,
+		/// Mixer already voted
+		DelegationTooLate,
+		/// Mixed vote power not equal to current delegations
+		InvalidMixedVoteValue,
+		/// Already did mixed vote for the current referendum
+		AlreadyMixedVoted
 	}
 
 	#[pallet::hooks]
@@ -1365,6 +1371,9 @@ impl<T: Config> Pallet<T> {
 			if let Voting::Direct { ref mut votes, delegations, .. } = voting {
 				match votes.binary_search_by_key(&ref_index, |i| i.0) {
 					Ok(i) => {
+						if let AccountVote::<BalanceOf<T>>::Mixed {..} = vote {
+							return Err(Error::<T>::AlreadyMixedVoted.into());
+						}
 						// Shouldn't be possible to fail, but we handle it gracefully.
 						status.tally.remove(votes[i].1).ok_or(ArithmeticError::Underflow)?;
 						if let Some(approve) = votes[i].1.as_standard() {
@@ -1377,6 +1386,9 @@ impl<T: Config> Pallet<T> {
 							votes.len() as u32 <= T::MaxVotes::get(),
 							Error::<T>::MaxVotesReached
 						);
+						if let AccountVote::<BalanceOf<T>>::Mixed {aye, nay} = vote {
+							ensure!(aye.1.votes(aye.0).saturating_add(nay.1.votes(nay.0)) == *delegations, Error::<T>::InvalidMixedVoteValue);
+						}
 						votes.insert(i, (ref_index, vote));
 					},
 				}
@@ -1505,6 +1517,18 @@ impl<T: Config> Pallet<T> {
 	) -> Result<u32, DispatchError> {
 		ensure!(who != target, Error::<T>::Nonsense);
 		ensure!(balance <= T::Currency::free_balance(&who), Error::<T>::InsufficientFunds);
+
+		// ensure the target doesn't have an Ongoing Direct Mixed Vote
+		if let Voting::Direct { votes, .. } = VotingOf::<T>::get(&target) {
+			for &(ref_index, account_vote) in votes.iter() {
+				if let AccountVote::Mixed { .. } = account_vote {
+					if let Some(ReferendumInfo::Ongoing(..)) = ReferendumInfoOf::<T>::get(ref_index) {
+						return Err(Error::<T>::DelegationTooLate.into());
+					}
+				}
+			}
+		}
+
 		let votes = VotingOf::<T>::try_mutate(&who, |voting| -> Result<u32, DispatchError> {
 			let mut old = Voting::Delegating {
 				balance,

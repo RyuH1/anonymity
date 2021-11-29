@@ -73,9 +73,12 @@ pub enum AccountVote<Balance> {
 	/// A split vote with balances given for both ways, and with no conviction, useful for
 	/// parachains when voting.
 	Split { aye: Balance, nay: Balance },
+	/// A mixed vote with balances given for both ways, and with conviction, useful for
+	/// anornymous delegation vote.
+	Mixed { aye: (Balance, Conviction), nay: (Balance, Conviction) },
 }
 
-impl<Balance: Saturating> AccountVote<Balance> {
+impl<Balance: Saturating + Zero> AccountVote<Balance> {
 	/// Returns `Some` of the lock periods that the account is locked for, assuming that the
 	/// referendum passed iff `approved` is `true`.
 	pub fn locked_if(self, approved: bool) -> Option<(u32, Balance)> {
@@ -92,6 +95,7 @@ impl<Balance: Saturating> AccountVote<Balance> {
 		match self {
 			AccountVote::Standard { balance, .. } => balance,
 			AccountVote::Split { aye, nay } => aye.saturating_add(nay),
+			AccountVote::Mixed { .. } => Zero::zero(),
 		}
 	}
 
