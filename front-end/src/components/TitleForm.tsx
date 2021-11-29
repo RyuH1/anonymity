@@ -2,56 +2,55 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import styled from '@xstyled/styled-components';
-import React, { ChangeEvent } from 'react';
-import { FieldError, NestDataObject } from 'react-hook-form/dist/types';
+import styled from '@xstyled/styled-components'
+import React, { ChangeEvent } from 'react'
+import { FieldError, NestDataObject } from 'react-hook-form/dist/types'
 
-import { Form } from '../ui-components/Form';
-import messages from '../util/messages';
+import { Form } from '../ui-components/Form'
+import messages from '../util/messages'
 
 interface Props {
-	className?: string
-	errorTitle?: FieldError | NestDataObject<any, any> | NestDataObject<any, any>[] | FieldError[]
-	onChange?: (event: ChangeEvent<HTMLInputElement>) => void
-	value?: string
+  className?: string
+  errorTitle?: FieldError | NestDataObject<any, any> | NestDataObject<any, any>[] | FieldError[]
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  value?: string
 }
 
-const TitleForm = ({ className, errorTitle, onChange, value = '' }:Props): JSX.Element => {
-
-	return (
-		<div className={className}>
-			<Form.Group>
-				<Form.Field width={16}>
-					<label>Title</label>
-					<input
-						className={errorTitle ? 'error title' : 'title'}
-						name={'title'}
-						onChange={onChange}
-						placeholder='Your title...'
-						type='text'
-						value={value}
-					/>
-					{errorTitle && <span className={'errorText'}>{messages.VALIDATION_TITLE_ERROR}</span>}
-				</Form.Field>
-			</Form.Group>
-		</div>
-	);
-};
+const TitleForm = ({ className, errorTitle, onChange, value = '' }: Props): JSX.Element => {
+  return (
+    <div className={className}>
+      <Form.Group>
+        <Form.Field width={16}>
+          <label>Title</label>
+          <input
+            className={errorTitle ? 'error title' : 'title'}
+            name={'title'}
+            onChange={onChange}
+            placeholder="Your title..."
+            type="text"
+            value={value}
+          />
+          {errorTitle && <span className={'errorText'}>{messages.VALIDATION_TITLE_ERROR}</span>}
+        </Form.Field>
+      </Form.Group>
+    </div>
+  )
+}
 
 export default styled(TitleForm)`
-	.fields {
-		padding: 0;
-	}
+  .fields {
+    padding: 0;
+  }
 
-	input.title {
-		font-size: 1.4rem !important;
-	}
+  input.title {
+    font-size: 1.4rem !important;
+  }
 
-	input.error {
-		border-color: red_secondary !important;
-	}
+  input.error {
+    border-color: ${({ theme }) => theme.colors.red_secondary} !important;
+  }
 
-	.errorText {
-		color: red_secondary;
-	}
-`;
+  .errorText {
+    color: ${({ theme }) => theme.colors.red_secondary};
+  }
+`

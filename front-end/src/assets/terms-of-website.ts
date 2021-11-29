@@ -1,6 +1,7 @@
 // Copyright 2019-2020 @Premiurly/polkassembly authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
+/* eslint-disable max-len */
 
 export default `Terms of Website Use
 ====================
@@ -194,4 +195,4 @@ Statutory information about Premiurly OÜ:
 -   Registered Office: Tornimäe tn 7, Kesklinna linnaosa, Tallinn, Harju maakond, 10145.
 
 Thank you for visiting our site.
-`;
+`

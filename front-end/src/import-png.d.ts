@@ -3,6 +3,6 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 declare module '*.png' {
-    const value: any;
-    export default value;
+  const value: any
+  export default value
 }

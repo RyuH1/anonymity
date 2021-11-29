@@ -3,13 +3,13 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 export const sortValues = {
-	COMMENTED: 'commented',
-	NEWEST: 'newest',
-	OLDEST: 'oldest'
-};
+  COMMENTED: 'commented',
+  NEWEST: 'newest',
+  OLDEST: 'oldest'
+}
 
 export const sortOptions = [
-	{ key: 'commented', text: 'Last Commented', value: sortValues.COMMENTED },
-	{ key: 'newest', text: 'Date Added (newest)', value: sortValues.NEWEST },
-	{ key: 'oldest', text: 'Date Added (oldest)', value: sortValues.OLDEST }
-];
+  { key: 'commented', text: 'Last Commented', value: sortValues.COMMENTED },
+  { key: 'newest', text: 'Date Added (newest)', value: sortValues.NEWEST },
+  { key: 'oldest', text: 'Date Added (oldest)', value: sortValues.OLDEST }
+]
