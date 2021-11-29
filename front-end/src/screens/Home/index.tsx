@@ -3,32 +3,33 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import styled from '@xstyled/styled-components'
-import React, { useContext } from 'react'
+import React from 'react'
 import { Grid } from 'semantic-ui-react'
 
-import DefaultAddressInfoBox from '../../components/DefaultAddressInfoBox'
-import { UserDetailsContext } from '../../context/UserDetailsContext'
-import { useRouter } from '../../hooks'
-import Button from '../../ui-components/Button'
 import BountyContainer from './LatestBounties'
-import DiscussionContainer from './LatestDiscussions'
 import MotionsContainer from './LatestMotions'
 import ProposalContainer from './LatestProposals'
 import ReferendaContainer from './LatestReferenda'
 import TechCommitteeProposals from './LatestTechCommitteeProposals'
 import TipContainer from './LatestTips'
 import TreasuryContainer from './LatestTreasury'
+// import DiscussionContainer from './LatestDiscussions'
+// import { useContext } from 'react'
+// import DefaultAddressInfoBox from '../../components/DefaultAddressInfoBox'
+// import { UserDetailsContext } from '../../context/UserDetailsContext'
+// import { useRouter } from '../../hooks'
+// import Button from '../../ui-components/Button'
 
 interface Props {
   className?: string
 }
 
 const Home = ({ className }: Props) => {
-  const { history } = useRouter()
-  const currentUser = useContext(UserDetailsContext)
-  const handleCreatePost = () => {
-    history.push('/post/create')
-  }
+  // const { history } = useRouter()
+  // const currentUser = useContext(UserDetailsContext)
+  // const handleCreatePost = () => {
+  //   history.push('/post/create')
+  // }
 
   return (
     <div className={className}>
@@ -49,20 +50,21 @@ const Home = ({ className }: Props) => {
           <BountyContainer className="bountyContainer" />
           <h3>Latest Technical committee proposals</h3>
           <TechCommitteeProposals className="techCommitteeProposalContainer" />
-          <h3>Latest discussions</h3>
-          <DiscussionContainer className="discussionContainer" />
+          {/*<h3>Latest discussions</h3>*/}
+          {/*<DiscussionContainer className="discussionContainer" />*/}
         </Grid.Column>
         <Grid.Column mobile={16} tablet={16} computer={6}>
-          {currentUser.id && (
-            <div className="mainButtonContainer">
-              <Button primary className={'newPostButton'} onClick={handleCreatePost}>
-                New post
-              </Button>
-            </div>
-          )}
-          {currentUser.id && currentUser.addresses?.length !== 0 && !currentUser.defaultAddress && (
-            <DefaultAddressInfoBox />
-          )}
+          {/*{currentUser.id && (*/}
+          {/*  <div className="mainButtonContainer">*/}
+          {/*    <Button primary className={'newPostButton'} onClick={handleCreatePost}>*/}
+          {/*      New post*/}
+          {/*    </Button>*/}
+          {/*  </div>*/}
+          {/*)}*/}
+          {/* eslint-disable-next-line max-len */}
+          {/*{currentUser.id && currentUser.addresses?.length !== 0 && !currentUser.defaultAddress && (*/}
+          {/*  <DefaultAddressInfoBox />*/}
+          {/*)}*/}
         </Grid.Column>
       </Grid>
     </div>

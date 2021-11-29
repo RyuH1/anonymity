@@ -21,8 +21,8 @@ import { UserDetailsProvider } from './context/UserDetailsContext'
 import Bounties from './screens/Bounties'
 import PostBounty from './screens/BountyPost'
 import Council from './screens/Council'
-import CreatePost from './screens/CreatePost'
-import PostDiscussion from './screens/DiscussionPost'
+// import CreatePost from './screens/CreatePost'
+// import PostDiscussion from './screens/DiscussionPost'
 // import Discussions from './screens/Discussions'
 import Home from './screens/Home'
 import { PrivacyPolicy, TermsAndConditions, TermsOfWebsite } from './screens/LegalDocuments'
@@ -89,9 +89,9 @@ const App = () => {
                             {/*<Route path="/signup">*/}
                             {/*  <SignupForm />*/}
                             {/*</Route>*/}
-                            <Route path="/post/create">
-                              <CreatePost />
-                            </Route>
+                            {/*<Route path="/post/create">*/}
+                            {/*  <CreatePost />*/}
+                            {/*</Route>*/}
                             <Route exact path="/bounty/:id">
                               <PostBounty />
                             </Route>
@@ -113,9 +113,9 @@ const App = () => {
                             <Route exact path="/tip/:hash">
                               <PostTip />
                             </Route>
-                            <Route exact path="/post/:id">
-                              <PostDiscussion />
-                            </Route>
+                            {/*<Route exact path="/post/:id">*/}
+                            {/*  <PostDiscussion />*/}
+                            {/*</Route>*/}
                             <Route path="/onchain">
                               <OnChain />
                             </Route>
