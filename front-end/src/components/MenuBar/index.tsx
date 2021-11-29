@@ -22,10 +22,10 @@ import getNetwork from 'src/util/getNetwork'
 import logo from '../../assets/polkassembly-logo.png'
 import { UserDetailsContext } from '../../context/UserDetailsContext'
 import { useLogoutMutation } from '../../generated/graphql'
-import { useFetchLatestBlockNumberQuery } from '../../generated/graphql'
-import { useRouter } from '../../hooks'
+import { useFinalizedBlock, useRouter } from '../../hooks'
 import { logout } from '../../services/auth.service'
 import AddressComponent from '../../ui-components/Address'
+// import { useFetchLatestBlockNumberQuery } from '../../generated/graphql'
 
 interface Props {
   children?: ReactNode
@@ -40,11 +40,12 @@ const MenuBar = ({ className }: Props): JSX.Element => {
   const [logoutMutation] = useLogoutMutation()
   const { history } = useRouter()
   const { setUserDetailsContextState, username } = currentUser
-  const { data } = useFetchLatestBlockNumberQuery()
+  // const { data } = useFetchLatestBlockNumberQuery()
 
-  const latestBlockNumber = data?.blockNumbers[0]?.number
+  // const latestBlockNumber = data?.blockNumbers[0]?.number
+  const latestBlockNumber = useFinalizedBlock()
 
-  const blockUrl = `https://${NETWORK}.subscan.io/block/${latestBlockNumber}`
+  const blockUrl = `https://${NETWORK}.subscan.io/block/${latestBlockNumber?.toString()}`
 
   const handleLogout = async () => {
     try {
@@ -197,7 +198,11 @@ const MenuBar = ({ className }: Props): JSX.Element => {
           {latestBlockNumber ? (
             <Menu.Item>
               <Icon name="cube" style={{ marginRight: '10px' }} />
-              <a href={blockUrl} target="_blank" rel="noreferrer">{` ${latestBlockNumber}`}</a>
+              <a
+                href={blockUrl}
+                target="_blank"
+                rel="noreferrer"
+              >{` ${latestBlockNumber?.toNumber()}`}</a>
             </Menu.Item>
           ) : null}
           <Menu.Menu position="right">
