@@ -12,6 +12,8 @@ import useCurrentBlock from 'src/hooks/useCurrentBlock'
 
 import OnchainCreationLabel from '../ui-components/OnchainCreationLabel'
 import StatusTag from '../ui-components/StatusTag'
+// import BN from 'bn.js'
+// import { ApiContext } from '../context/ApiContext'
 
 interface GovernanceProps {
   address: string
@@ -24,7 +26,7 @@ interface GovernanceProps {
   status?: string | null
   tipReason?: string
   title?: string | null
-  topic: string
+  topic?: string
 }
 
 const GovernanceCard = function ({
@@ -48,6 +50,16 @@ const GovernanceCard = function ({
   const subTitle = title && tipReason && method && <h5>{title}</h5>
   const currentBlock = useCurrentBlock()?.toNumber() || 0
   const ownProposal = currentUser?.addresses?.includes(address)
+
+  // const { api, apiReady } = useContext(ApiContext)
+  //
+  // useEffect(() => {
+  //   if (!api || !apiReady || !onchainId) return
+  //
+  //   api.derive.democracy.referendumsInfo([new BN(onchainId)]).then((result) => {
+  //     console.log('info', result)
+  //   })
+  // }, [api, apiReady, onchainId])
 
   return (
     <div className={className + (ownProposal ? ' own-proposal' : '')}>
@@ -89,10 +101,12 @@ const GovernanceCard = function ({
                 )}
               </li>
             )}
-            <li>
-              <Icon name="comment" />
-              {comments} comments
-            </li>
+            {comments && (
+              <li>
+                <Icon name="comment" />
+                {comments} comments
+              </li>
+            )}
           </ul>
         </Segment>
       </Segment.Group>

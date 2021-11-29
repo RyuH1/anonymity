@@ -2,31 +2,59 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import React, { useEffect } from 'react'
+import type { DeriveReferendum } from '@polkadot/api-derive/types'
+import React, { useContext, useEffect, useState } from 'react'
 
 import ReferendaListing from '../../../components/Listings/ReferendaListing'
-import { useLatestReferendaPostsQuery } from '../../../generated/graphql'
-import { post_type } from '../../../global/post_types'
+import { ApiContext } from '../../../context/ApiContext'
 import FilteredError from '../../../ui-components/FilteredError'
 import Loader from '../../../ui-components/Loader'
+// import { useLatestReferendaPostsQuery } from '../../../generated/graphql'
+// import { post_type } from '../../../global/post_types'
 
 interface Props {
   className?: string
 }
 
 const ReferendaContainer = ({ className }: Props) => {
-  const { data, error, refetch } = useLatestReferendaPostsQuery({
-    variables: {
-      limit: 2,
-      postType: post_type.ON_CHAIN
-    }
-  })
+  const { api, apiReady } = useContext(ApiContext)
+
+  const [data, setData] = useState<DeriveReferendum[] | null>(null)
+  const [error, setError] = useState<any>(null)
+
+  // const { data, error, refetch } = useLatestReferendaPostsQuery({
+  //   variables: {
+  //     limit: 2,
+  //     postType: post_type.ON_CHAIN
+  //   }
+  // })
+
+  // useEffect(() => {
+  //   refetch()
+  // }, [refetch])
 
   useEffect(() => {
-    refetch()
-  }, [refetch])
+    if (!api || !apiReady) return
 
-  if (error?.message) return <FilteredError text={error.message} />
+    let unsubscribe: () => void
+
+    api.derive.democracy
+      .referendumsActive((referendums) => {
+        // Only show last 2 referendum items
+        setData(referendums.slice(0, 2))
+      })
+      .then((unsub) => {
+        unsubscribe = unsub
+      })
+      .catch((e) => {
+        console.error(e)
+        setError(e)
+      })
+
+    return () => unsubscribe && unsubscribe()
+  }, [api, apiReady])
+
+  if (error && error?.message) return <FilteredError text={error.message} />
 
   if (data) return <ReferendaListing className={className} data={data} />
 

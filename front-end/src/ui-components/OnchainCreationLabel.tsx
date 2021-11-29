@@ -11,7 +11,7 @@ import TopicTag from '../ui-components/TopicTag'
 interface Props {
   address: string
   className?: string
-  topic: string
+  topic?: string
 }
 
 const OnchainCreationLabel = ({ address, className, topic }: Props) => {
@@ -19,7 +19,11 @@ const OnchainCreationLabel = ({ address, className, topic }: Props) => {
     <div className={className}>
       by
       <Address address={address} className="address" displayInline={true} />
-      from <TopicTag className={'topic-tag'} topic={topic} />
+      {topic && (
+        <>
+          from <TopicTag className={'topic-tag'} topic={topic} />
+        </>
+      )}
     </div>
   )
 }
