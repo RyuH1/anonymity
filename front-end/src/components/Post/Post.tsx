@@ -2,75 +2,79 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
+/* eslint-disable max-len */
+
+import { DeriveReferendum } from '@polkadot/api-derive/types'
 import styled from '@xstyled/styled-components'
 import { ApolloQueryResult } from 'apollo-client'
-import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Grid, Icon, Responsive } from 'semantic-ui-react'
+import React /*, { useContext, useEffect, useState }*/ from 'react'
+// import { Link } from 'react-router-dom'
+import { Grid /*, Icon*/, Responsive } from 'semantic-ui-react'
 
-import { MetaContext } from '../../context/MetaContext'
-import { UserDetailsContext } from '../../context/UserDetailsContext'
+// import { MetaContext } from '../../context/MetaContext'
+// import { UserDetailsContext } from '../../context/UserDetailsContext'
 import {
   BountyPostAndCommentsQuery,
   BountyPostAndCommentsQueryHookResult,
-  BountyPostFragment,
+  // BountyPostFragment,
   DiscussionPostAndCommentsQuery,
   DiscussionPostAndCommentsQueryHookResult,
-  DiscussionPostFragment,
+  // DiscussionPostFragment,
   MotionPostAndCommentsQuery,
   MotionPostAndCommentsQueryHookResult,
-  MotionPostFragment,
-  OnchainLinkBountyFragment,
-  OnchainLinkMotionFragment,
-  OnchainLinkProposalFragment,
-  OnchainLinkReferendumFragment,
-  OnchainLinkTechCommitteeProposalFragment,
-  OnchainLinkTipFragment,
-  OnchainLinkTreasuryProposalFragment,
+  // MotionPostFragment,
+  // OnchainLinkBountyFragment,
+  // OnchainLinkMotionFragment,
+  // OnchainLinkProposalFragment,
+  // OnchainLinkReferendumFragment,
+  // OnchainLinkTechCommitteeProposalFragment,
+  // OnchainLinkTipFragment,
+  // OnchainLinkTreasuryProposalFragment,
   ProposalPostAndCommentsQuery,
   ProposalPostAndCommentsQueryHookResult,
-  ProposalPostFragment,
+  // ProposalPostFragment,
   ReferendumPostAndCommentsQuery,
   ReferendumPostAndCommentsQueryHookResult,
   ReferendumPostFragment,
   TechCommitteeProposalPostAndCommentsQuery,
   TechCommitteeProposalPostAndCommentsQueryHookResult,
-  TechCommitteeProposalPostFragment,
+  // TechCommitteeProposalPostFragment,
   TipPostAndCommentsQuery,
   TipPostAndCommentsQueryHookResult,
-  TipPostFragment,
+  // TipPostFragment,
   TreasuryProposalPostAndCommentsQuery,
-  TreasuryProposalPostAndCommentsQueryHookResult,
-  TreasuryProposalPostFragment
+  TreasuryProposalPostAndCommentsQueryHookResult
+  // TreasuryProposalPostFragment
 } from '../../generated/graphql'
-import Button from '../../ui-components/Button'
-import Card from '../../ui-components/Card'
+// import Card from '../../ui-components/Card'
 import ScrollToTop from '../../ui-components/ScrollToTop'
-import Comments from '../Comment/Comments'
-import EditablePostContent from '../EditablePostContent'
 import NoPostFound from '../NoPostFound'
-import OptionPoll from '../OptionPoll'
-import CreateOptionPoll from '../OptionPoll/CreateOptionPoll'
-import PostReactionBar from '../Reactionbar/PostReactionBar'
-import ReportButton from '../ReportButton'
-import ShareButton from '../ShareButton'
-import SubscriptionButton from '../SubscriptionButton/SubscriptionButton'
-import Timeline from '../Timeline'
-import TrackerButton from '../TrackerButton'
+// import OptionPoll from '../OptionPoll'
+// import Timeline from '../Timeline'
 import GovenanceSideBar from './GovernanceSideBar'
-import Poll from './Poll'
-import CreatePostComment from './PostCommentForm'
-import PostBountyInfo from './PostGovernanceInfo/PostBountyInfo'
-import PostMotionInfo from './PostGovernanceInfo/PostMotionInfo'
-import PostProposalInfo from './PostGovernanceInfo/PostProposalInfo'
+// import Poll from './Poll'
+// import PostBountyInfo from './PostGovernanceInfo/PostBountyInfo'
+// import PostMotionInfo from './PostGovernanceInfo/PostMotionInfo'
+// import PostProposalInfo from './PostGovernanceInfo/PostProposalInfo'
 import PostReferendumInfo from './PostGovernanceInfo/PostReferendumInfo'
-import PostTechCommitteeProposalInfo from './PostGovernanceInfo/PostTechCommitteeProposalInfo'
-import PostTipInfo from './PostGovernanceInfo/PostTipInfo'
-import PostTreasuryInfo from './PostGovernanceInfo/PostTreasuryInfo'
+// import PostTechCommitteeProposalInfo from './PostGovernanceInfo/PostTechCommitteeProposalInfo'
+// import PostTipInfo from './PostGovernanceInfo/PostTipInfo'
+// import PostTreasuryInfo from './PostGovernanceInfo/PostTreasuryInfo'
+// import Button from '../../ui-components/Button'
+// import Comments from '../Comment/Comments'
+// import EditablePostContent from '../EditablePostContent'
+// import CreateOptionPoll from '../OptionPoll/CreateOptionPoll'
+// import PostReactionBar from '../Reactionbar/PostReactionBar'
+// import ReportButton from '../ReportButton'
+// import ShareButton from '../ShareButton'
+// import SubscriptionButton from '../SubscriptionButton/SubscriptionButton'
+// import TrackerButton from '../TrackerButton'
+// import CreatePostComment from './PostCommentForm'
 
 interface Props {
   className?: string
   data:
+    | DeriveReferendum
     | DiscussionPostAndCommentsQueryHookResult['data']
     | ProposalPostAndCommentsQueryHookResult['data']
     | ReferendumPostAndCommentsQueryHookResult['data']
@@ -86,7 +90,7 @@ interface Props {
   isTreasuryProposal?: boolean
   isTechCommitteeProposal?: boolean
   isTipProposal?: boolean
-  refetch: (
+  refetch?: (
     variables?: any
   ) =>
     | Promise<ApolloQueryResult<ReferendumPostAndCommentsQuery>>
@@ -99,10 +103,10 @@ interface Props {
     | Promise<ApolloQueryResult<TechCommitteeProposalPostAndCommentsQuery>>
 }
 
-interface Redirection {
-  link?: string
-  text?: string
-}
+// interface Redirection {
+//   link?: string
+//   text?: string
+// }
 
 const Post = ({
   className,
@@ -113,171 +117,178 @@ const Post = ({
   isReferendum = false,
   isTipProposal = false,
   isTreasuryProposal = false,
-  isTechCommitteeProposal = false,
-  refetch
-}: Props) => {
-  const post = data && data.posts && data.posts[0]
-  const { id, addresses } = useContext(UserDetailsContext)
-  const [isEditing, setIsEditing] = useState(false)
-  const toggleEdit = () => setIsEditing(!isEditing)
-  const { setMetaContextState } = useContext(MetaContext)
+  isTechCommitteeProposal = false
+}: // refetch
+Props) => {
+  // const post = data && data.posts && data.posts[0]
+  const post = data
+  // const { id /*, addresses*/ } = useContext(UserDetailsContext)
+  // const [isEditing, setIsEditing] = useState(false)
+  // const toggleEdit = () => setIsEditing(!isEditing)
+  // const { setMetaContextState } = useContext(MetaContext)
 
-  useEffect(() => {
-    const users: string[] = []
+  // useEffect(() => {
+  //   const users: string[] = []
+  //
+  //   if (post?.author?.username) {
+  //     users.push(post?.author?.username)
+  //   }
+  //
+  //   post?.comments.forEach((c) => {
+  //     if (c.author?.username && !users.includes(c.author?.username)) {
+  //       users.push(c.author?.username)
+  //     }
+  //   })
+  //   global.window.localStorage.setItem('users', users.join(','))
+  // }, [post])
+  //
+  // useEffect(() => {
+  //   setMetaContextState((prevState) => {
+  //     return {
+  //       ...prevState,
+  //       description: post?.content || prevState.description,
+  //       title: `${post?.title || 'Polkassembly'}`
+  //     }
+  //   })
+  // }, [post, setMetaContextState])
 
-    if (post?.author?.username) {
-      users.push(post?.author?.username)
-    }
+  // const isOnchainPost =
+  //   isMotion ||
+  //   isProposal ||
+  //   isReferendum ||
+  //   isTreasuryProposal ||
+  //   isBounty ||
+  //   isTechCommitteeProposal ||
+  //   isTipProposal
 
-    post?.comments.forEach((c) => {
-      if (c.author?.username && !users.includes(c.author?.username)) {
-        users.push(c.author?.username)
-      }
-    })
-    global.window.localStorage.setItem('users', users.join(','))
-  }, [post])
-
-  useEffect(() => {
-    setMetaContextState((prevState) => {
-      return {
-        ...prevState,
-        description: post?.content || prevState.description,
-        title: `${post?.title || 'Polkassembly'}`
-      }
-    })
-  }, [post, setMetaContextState])
-
-  const isOnchainPost =
-    isMotion ||
-    isProposal ||
-    isReferendum ||
-    isTreasuryProposal ||
-    isBounty ||
-    isTechCommitteeProposal ||
-    isTipProposal
-
-  let onchainId: string | number | null | undefined
-  let referendumPost: ReferendumPostFragment | undefined
-  let proposalPost: ProposalPostFragment | undefined
-  let motionPost: MotionPostFragment | undefined
-  let treasuryPost: TreasuryProposalPostFragment | undefined
-  let tipPost: TipPostFragment | undefined
-  let bountyPost: BountyPostFragment | undefined
-  let techCommitteeProposalPost: TechCommitteeProposalPostFragment | undefined
+  // let onchainId: string | number | null | undefined
+  let referendumPost: DeriveReferendum | ReferendumPostFragment | undefined
+  // let proposalPost: ProposalPostFragment | undefined
+  // let motionPost: MotionPostFragment | undefined
+  // let treasuryPost: TreasuryProposalPostFragment | undefined
+  // let tipPost: TipPostFragment | undefined
+  // let bountyPost: BountyPostFragment | undefined
+  // let techCommitteeProposalPost: TechCommitteeProposalPostFragment | undefined
   let definedOnchainLink:
-    | OnchainLinkTechCommitteeProposalFragment
-    | OnchainLinkBountyFragment
-    | OnchainLinkMotionFragment
-    | OnchainLinkReferendumFragment
-    | OnchainLinkProposalFragment
-    | OnchainLinkTipFragment
-    | OnchainLinkTreasuryProposalFragment
+    | { threshold: any }
+    // | OnchainLinkTechCommitteeProposalFragment
+    // | OnchainLinkBountyFragment
+    // | OnchainLinkMotionFragment
+    // | OnchainLinkReferendumFragment
+    // | OnchainLinkProposalFragment
+    // | OnchainLinkTipFragment
+    // | OnchainLinkTreasuryProposalFragment
     | undefined
-  let postStatus: string | undefined
-  let redirection: Redirection = {}
+  // let postStatus: string | undefined
+  // let redirection: Redirection = {}
 
-  if (post && isTechCommitteeProposal) {
-    techCommitteeProposalPost = post as TechCommitteeProposalPostFragment
-    definedOnchainLink =
-      techCommitteeProposalPost.onchain_link as OnchainLinkTechCommitteeProposalFragment
-    onchainId = definedOnchainLink.onchain_tech_committee_proposal_id
-    postStatus =
-      techCommitteeProposalPost?.onchain_link?.onchain_tech_committee_proposal?.[0]?.status?.[0]
-        .status
-  }
-
-  if (post && isBounty) {
-    bountyPost = post as BountyPostFragment
-    definedOnchainLink = bountyPost.onchain_link as OnchainLinkBountyFragment
-    onchainId = definedOnchainLink.onchain_bounty_id
-    postStatus = bountyPost?.onchain_link?.onchain_bounty?.[0]?.bountyStatus?.[0].status
-  }
+  // if (post && isTechCommitteeProposal) {
+  //   techCommitteeProposalPost = post as TechCommitteeProposalPostFragment
+  //   definedOnchainLink =
+  //     techCommitteeProposalPost.onchain_link as OnchainLinkTechCommitteeProposalFragment
+  //   onchainId = definedOnchainLink.onchain_tech_committee_proposal_id
+  //   postStatus =
+  //     techCommitteeProposalPost?.onchain_link?.onchain_tech_committee_proposal?.[0]?.status?.[0]
+  //       .status
+  // }
+  //
+  // if (post && isBounty) {
+  //   bountyPost = post as BountyPostFragment
+  //   definedOnchainLink = bountyPost.onchain_link as OnchainLinkBountyFragment
+  //   onchainId = definedOnchainLink.onchain_bounty_id
+  //   postStatus = bountyPost?.onchain_link?.onchain_bounty?.[0]?.bountyStatus?.[0].status
+  // }
 
   if (post && isReferendum) {
-    referendumPost = post as ReferendumPostFragment
-    definedOnchainLink = referendumPost.onchain_link as OnchainLinkReferendumFragment
-    onchainId = definedOnchainLink.onchain_referendum_id
-    postStatus = referendumPost?.onchain_link?.onchain_referendum?.[0]?.referendumStatus?.[0].status
-  }
-
-  if (post && isProposal) {
-    proposalPost = post as ProposalPostFragment
-    definedOnchainLink = proposalPost.onchain_link as OnchainLinkProposalFragment
-    onchainId = definedOnchainLink.onchain_proposal_id
-    postStatus = proposalPost?.onchain_link?.onchain_proposal?.[0]?.proposalStatus?.[0].status
-    if (
-      definedOnchainLink.onchain_referendum_id ||
-      definedOnchainLink.onchain_referendum_id === 0
-    ) {
-      redirection = {
-        link: `/referendum/${definedOnchainLink.onchain_referendum_id}`,
-        text: `Referendum #${definedOnchainLink.onchain_referendum_id}`
-      }
+    referendumPost = post as DeriveReferendum
+    // definedOnchainLink = referendumPost.onchain_link as OnchainLinkReferendumFragment
+    definedOnchainLink = {
+      threshold: referendumPost.status.threshold
     }
+    console.log(definedOnchainLink)
+    // onchainId = definedOnchainLink.onchain_referendum_id
+    // postStatus = referendumPost?.onchain_link?.onchain_referendum?.[0]?.referendumStatus?.[0].status
   }
 
-  if (post && isMotion) {
-    motionPost = post as MotionPostFragment
-    definedOnchainLink = motionPost.onchain_link as OnchainLinkMotionFragment
-    onchainId = definedOnchainLink.onchain_motion_id
-    postStatus = motionPost?.onchain_link?.onchain_motion?.[0]?.motionStatus?.[0].status
-    if (
-      definedOnchainLink.onchain_referendum_id ||
-      definedOnchainLink.onchain_referendum_id === 0
-    ) {
-      redirection = {
-        link: `/referendum/${definedOnchainLink.onchain_referendum_id}`,
-        text: `Referendum #${definedOnchainLink.onchain_referendum_id}`
-      }
-    }
-  }
+  // if (post && isProposal) {
+  //   proposalPost = post as ProposalPostFragment
+  //   definedOnchainLink = proposalPost.onchain_link as OnchainLinkProposalFragment
+  //   onchainId = definedOnchainLink.onchain_proposal_id
+  //   postStatus = proposalPost?.onchain_link?.onchain_proposal?.[0]?.proposalStatus?.[0].status
+  //   if (
+  //     definedOnchainLink.onchain_referendum_id ||
+  //     definedOnchainLink.onchain_referendum_id === 0
+  //   ) {
+  //     redirection = {
+  //       link: `/referendum/${definedOnchainLink.onchain_referendum_id}`,
+  //       text: `Referendum #${definedOnchainLink.onchain_referendum_id}`
+  //     }
+  //   }
+  // }
+  //
+  // if (post && isMotion) {
+  //   motionPost = post as MotionPostFragment
+  //   definedOnchainLink = motionPost.onchain_link as OnchainLinkMotionFragment
+  //   onchainId = definedOnchainLink.onchain_motion_id
+  //   postStatus = motionPost?.onchain_link?.onchain_motion?.[0]?.motionStatus?.[0].status
+  //   if (
+  //     definedOnchainLink.onchain_referendum_id ||
+  //     definedOnchainLink.onchain_referendum_id === 0
+  //   ) {
+  //     redirection = {
+  //       link: `/referendum/${definedOnchainLink.onchain_referendum_id}`,
+  //       text: `Referendum #${definedOnchainLink.onchain_referendum_id}`
+  //     }
+  //   }
+  // }
+  //
+  // if (post && isTreasuryProposal) {
+  //   treasuryPost = post as TreasuryProposalPostFragment
+  //   definedOnchainLink = treasuryPost.onchain_link as OnchainLinkTreasuryProposalFragment
+  //   onchainId = definedOnchainLink.onchain_treasury_proposal_id
+  //   postStatus =
+  // eslint-disable-next-line max-len
+  //     treasuryPost?.onchain_link?.onchain_treasury_spend_proposal?.[0]?.treasuryStatus?.[0].status
+  //   if (definedOnchainLink.onchain_motion_id || definedOnchainLink.onchain_motion_id === 0) {
+  //     redirection = {
+  //       link: `/motion/${definedOnchainLink.onchain_motion_id}`,
+  //       text: `Motion #${definedOnchainLink.onchain_motion_id}`
+  //     }
+  //   }
+  // }
+  //
+  // if (post && isTipProposal) {
+  //   tipPost = post as TipPostFragment
+  //   definedOnchainLink = tipPost.onchain_link as OnchainLinkTipFragment
+  //   onchainId = definedOnchainLink.onchain_tip_id
+  //   postStatus = tipPost?.onchain_link?.onchain_tip?.[0]?.tipStatus?.[0].status
+  // }
 
-  if (post && isTreasuryProposal) {
-    treasuryPost = post as TreasuryProposalPostFragment
-    definedOnchainLink = treasuryPost.onchain_link as OnchainLinkTreasuryProposalFragment
-    onchainId = definedOnchainLink.onchain_treasury_proposal_id
-    postStatus =
-      treasuryPost?.onchain_link?.onchain_treasury_spend_proposal?.[0]?.treasuryStatus?.[0].status
-    if (definedOnchainLink.onchain_motion_id || definedOnchainLink.onchain_motion_id === 0) {
-      redirection = {
-        link: `/motion/${definedOnchainLink.onchain_motion_id}`,
-        text: `Motion #${definedOnchainLink.onchain_motion_id}`
-      }
-    }
-  }
-
-  if (post && isTipProposal) {
-    tipPost = post as TipPostFragment
-    definedOnchainLink = tipPost.onchain_link as OnchainLinkTipFragment
-    onchainId = definedOnchainLink.onchain_tip_id
-    postStatus = tipPost?.onchain_link?.onchain_tip?.[0]?.tipStatus?.[0].status
-  }
-
-  const isDiscussion = (
-    post:
-      | TechCommitteeProposalPostFragment
-      | BountyPostFragment
-      | TipPostFragment
-      | TreasuryProposalPostFragment
-      | MotionPostFragment
-      | ProposalPostFragment
-      | DiscussionPostFragment
-      | ReferendumPostFragment
-  ): post is DiscussionPostFragment => {
-    if (
-      !isTechCommitteeProposal &&
-      !isReferendum &&
-      !isProposal &&
-      !isMotion &&
-      !isTreasuryProposal &&
-      !isTipProposal &&
-      !isBounty
-    ) {
-      return (post as DiscussionPostFragment) !== undefined
-    }
-
-    return false
-  }
+  // const isDiscussion = (
+  //   post:
+  //     | TechCommitteeProposalPostFragment
+  //     | BountyPostFragment
+  //     | TipPostFragment
+  //     | TreasuryProposalPostFragment
+  //     | MotionPostFragment
+  //     | ProposalPostFragment
+  //     | DiscussionPostFragment
+  //     | ReferendumPostFragment
+  // ): post is DiscussionPostFragment => {
+  //   if (
+  //     !isTechCommitteeProposal &&
+  //     !isReferendum &&
+  //     !isProposal &&
+  //     !isMotion &&
+  //     !isTreasuryProposal &&
+  //     !isTipProposal &&
+  //     !isBounty
+  //   ) {
+  //     return (post as DiscussionPostFragment) !== undefined
+  //   }
+  //
+  //   return false
+  // }
 
   if (!post)
     return (
@@ -292,44 +303,44 @@ const Post = ({
       />
     )
 
-  const isBountyProposer =
-    isBounty &&
-    bountyPost?.onchain_link?.proposer_address &&
-    addresses?.includes(bountyPost.onchain_link.proposer_address)
-  const isProposalProposer =
-    isProposal &&
-    proposalPost?.onchain_link?.proposer_address &&
-    addresses?.includes(proposalPost.onchain_link.proposer_address)
-  const isReferendumProposer =
-    isReferendum &&
-    referendumPost?.onchain_link?.proposer_address &&
-    addresses?.includes(referendumPost.onchain_link.proposer_address)
-  const isMotionProposer =
-    isMotion &&
-    motionPost?.onchain_link?.proposer_address &&
-    addresses?.includes(motionPost.onchain_link.proposer_address)
-  const isTreasuryProposer =
-    isTreasuryProposal &&
-    treasuryPost?.onchain_link?.proposer_address &&
-    addresses?.includes(treasuryPost.onchain_link.proposer_address)
-  const isTipProposer =
-    isTipProposal &&
-    tipPost?.onchain_link?.proposer_address &&
-    addresses?.includes(tipPost.onchain_link.proposer_address)
-  const isTechCommitteeProposalProposer =
-    isTechCommitteeProposal &&
-    techCommitteeProposalPost?.onchain_link?.proposer_address &&
-    addresses?.includes(techCommitteeProposalPost.onchain_link.proposer_address)
-  const canEdit =
-    !isEditing &&
-    (post.author?.id === id ||
-      isProposalProposer ||
-      isReferendumProposer ||
-      isMotionProposer ||
-      isTreasuryProposer ||
-      isTipProposer ||
-      isBountyProposer ||
-      isTechCommitteeProposalProposer)
+  // const isBountyProposer =
+  //   isBounty &&
+  //   bountyPost?.onchain_link?.proposer_address &&
+  //   addresses?.includes(bountyPost.onchain_link.proposer_address)
+  // const isProposalProposer =
+  //   isProposal &&
+  //   proposalPost?.onchain_link?.proposer_address &&
+  //   addresses?.includes(proposalPost.onchain_link.proposer_address)
+  // const isReferendumProposer =
+  //   isReferendum &&
+  //   referendumPost?.onchain_link?.proposer_address &&
+  //   addresses?.includes(referendumPost.onchain_link.proposer_address)
+  // const isMotionProposer =
+  //   isMotion &&
+  //   motionPost?.onchain_link?.proposer_address &&
+  //   addresses?.includes(motionPost.onchain_link.proposer_address)
+  // const isTreasuryProposer =
+  //   isTreasuryProposal &&
+  //   treasuryPost?.onchain_link?.proposer_address &&
+  //   addresses?.includes(treasuryPost.onchain_link.proposer_address)
+  // const isTipProposer =
+  //   isTipProposal &&
+  //   tipPost?.onchain_link?.proposer_address &&
+  //   addresses?.includes(tipPost.onchain_link.proposer_address)
+  // const isTechCommitteeProposalProposer =
+  //   isTechCommitteeProposal &&
+  //   techCommitteeProposalPost?.onchain_link?.proposer_address &&
+  //   addresses?.includes(techCommitteeProposalPost.onchain_link.proposer_address)
+  // const canEdit =
+  //   !isEditing &&
+  //   (post.author?.id === id ||
+  //     isProposalProposer ||
+  //     isReferendumProposer ||
+  //     isMotionProposer ||
+  //     isTreasuryProposer ||
+  //     isTipProposer ||
+  //     isBountyProposer ||
+  //     isTechCommitteeProposalProposer)
 
   const Sidebar = () => (
     <>
@@ -341,180 +352,181 @@ const Post = ({
         isTipProposal={isTipProposal}
         isTreasuryProposal={isTreasuryProposal}
         isTechCommitteeProposal={isTechCommitteeProposal}
-        onchainId={onchainId}
+        // onchainId={onchainId}
+        onchainId={Number((post as DeriveReferendum).index)}
         onchainLink={definedOnchainLink}
-        status={postStatus}
+        // status={postStatus}
+        status={'Started'}
       />
-      {isDiscussion(post) && <Poll postId={post.id} canEdit={post.author?.id === id} />}
-      <OptionPoll postId={post.id} canEdit={post.author?.id === id} />
+      {/*{isDiscussion(post) && <Poll postId={post.id} canEdit={post.author?.id === id} />}*/}
+      {/*<OptionPoll postId={post.id} canEdit={post.author?.id === id} />*/}
     </>
   )
 
   return (
     <Grid className={className}>
       <Grid.Column mobile={16} tablet={16} computer={10} largeScreen={10}>
-        {redirection.link && (
-          <Link className="redirection" to={redirection.link}>
-            <Card className="redirectionCard">
-              <Icon name="forward" /> This proposal has become{' '}
-              <span className="redirectionText">{redirection.text}</span>
-            </Card>
-          </Link>
-        )}
-        <div className="post_content">
-          <EditablePostContent
-            isEditing={isEditing}
-            isTipProposal={isTipProposal}
-            onchainId={onchainId}
-            post={post}
-            postStatus={postStatus}
-            refetch={refetch}
-            toggleEdit={toggleEdit}
-          />
-          <div className="actions-bar">
-            <PostReactionBar className="reactions" postId={post.id} />
-            {id && <div className="vl" />}
-            {id && !isEditing && <SubscriptionButton postId={post.id} />}
-            {canEdit && (
-              <Button className={'social'} onClick={toggleEdit}>
-                <Icon name="edit" className="icon" />
-                Edit
-              </Button>
-            )}
-            {id && !isEditing && !isOnchainPost && (
-              <ReportButton type="post" contentId={`${post.id}`} />
-            )}
-            {canEdit && !isEditing && <CreateOptionPoll postId={post.id} />}
-            {id && onchainId && isOnchainPost && !isEditing && (
-              <TrackerButton
-                onchainId={onchainId}
-                isBounty={isBounty}
-                isMotion={isMotion}
-                isProposal={isProposal}
-                isReferendum={isReferendum}
-                isTipProposal={isTipProposal}
-                isTreasuryProposal={isTreasuryProposal}
-                isTechCommitteeProposal={isTechCommitteeProposal}
-              />
-            )}
-            <ShareButton title={post.title} />
-          </div>
-        </div>
-        {isTechCommitteeProposal && (
-          <>
-            <PostTechCommitteeProposalInfo
-              onchainLink={definedOnchainLink as OnchainLinkTechCommitteeProposalFragment}
-            />
-            <Timeline
-              statuses={
-                /* eslint-disable max-len */
-                techCommitteeProposalPost?.onchain_link?.onchain_tech_committee_proposal?.[0]?.status?.map(
-                  (s) => ({
-                    blockNumber: s.blockNumber?.number || 0,
-                    status: s.status || ''
-                  })
-                ) || []
-              }
-            />
-          </>
-        )}
-        {isBounty && (
-          <>
-            <PostBountyInfo onchainLink={definedOnchainLink as OnchainLinkBountyFragment} />
-            <Timeline
-              statuses={
-                bountyPost?.onchain_link?.onchain_bounty?.[0]?.bountyStatus?.map((s) => ({
-                  blockNumber: s.blockNumber?.number || 0,
-                  status: s.status || ''
-                })) || []
-              }
-            />
-          </>
-        )}
-        {isMotion && (
-          <>
-            <PostMotionInfo onchainLink={definedOnchainLink as OnchainLinkMotionFragment} />
-            <Timeline
-              statuses={
-                motionPost?.onchain_link?.onchain_motion?.[0]?.motionStatus?.map((s) => ({
-                  blockNumber: s.blockNumber?.number || 0,
-                  status: s.status || ''
-                })) || []
-              }
-            />
-          </>
-        )}
-        {isProposal && (
-          <>
-            <PostProposalInfo onchainLink={definedOnchainLink as OnchainLinkProposalFragment} />
-            <Timeline
-              statuses={
-                proposalPost?.onchain_link?.onchain_proposal?.[0]?.proposalStatus?.map((s) => ({
-                  blockNumber: s.blockNumber?.number || 0,
-                  status: s.status || ''
-                })) || []
-              }
-            />
-          </>
-        )}
+        {/*{redirection.link && (*/}
+        {/*  <Link className="redirection" to={redirection.link}>*/}
+        {/*    <Card className="redirectionCard">*/}
+        {/*      <Icon name="forward" /> This proposal has become{' '}*/}
+        {/*      <span className="redirectionText">{redirection.text}</span>*/}
+        {/*    </Card>*/}
+        {/*  </Link>*/}
+        {/*)}*/}
+        {/*<div className="post_content">*/}
+        {/*  <EditablePostContent*/}
+        {/*    isEditing={isEditing}*/}
+        {/*    isTipProposal={isTipProposal}*/}
+        {/*    onchainId={onchainId}*/}
+        {/*    post={post}*/}
+        {/*    postStatus={postStatus}*/}
+        {/*    refetch={refetch}*/}
+        {/*    toggleEdit={toggleEdit}*/}
+        {/*  />*/}
+        {/*  <div className="actions-bar">*/}
+        {/*    <PostReactionBar className="reactions" postId={post.id} />*/}
+        {/*    {id && <div className="vl" />}*/}
+        {/*    {id && !isEditing && <SubscriptionButton postId={post.id} />}*/}
+        {/*    {canEdit && (*/}
+        {/*      <Button className={'social'} onClick={toggleEdit}>*/}
+        {/*        <Icon name="edit" className="icon" />*/}
+        {/*        Edit*/}
+        {/*      </Button>*/}
+        {/*    )}*/}
+        {/*    {id && !isEditing && !isOnchainPost && (*/}
+        {/*      <ReportButton type="post" contentId={`${post.id}`} />*/}
+        {/*    )}*/}
+        {/*    {canEdit && !isEditing && <CreateOptionPoll postId={post.id} />}*/}
+        {/*    {id && onchainId && isOnchainPost && !isEditing && (*/}
+        {/*      <TrackerButton*/}
+        {/*        onchainId={onchainId}*/}
+        {/*        isBounty={isBounty}*/}
+        {/*        isMotion={isMotion}*/}
+        {/*        isProposal={isProposal}*/}
+        {/*        isReferendum={isReferendum}*/}
+        {/*        isTipProposal={isTipProposal}*/}
+        {/*        isTreasuryProposal={isTreasuryProposal}*/}
+        {/*        isTechCommitteeProposal={isTechCommitteeProposal}*/}
+        {/*      />*/}
+        {/*    )}*/}
+        {/*    <ShareButton title={post.title} />*/}
+        {/*  </div>*/}
+        {/*</div>*/}
+        {/*{isTechCommitteeProposal && (*/}
+        {/*  <>*/}
+        {/*    <PostTechCommitteeProposalInfo*/}
+        {/*      onchainLink={definedOnchainLink as OnchainLinkTechCommitteeProposalFragment}*/}
+        {/*    />*/}
+        {/*    <Timeline*/}
+        {/*      statuses={*/}
+        {/*        techCommitteeProposalPost?.onchain_link?.onchain_tech_committee_proposal?.[0]?.status?.map(*/}
+        {/*          (s) => ({*/}
+        {/*            blockNumber: s.blockNumber?.number || 0,*/}
+        {/*            status: s.status || ''*/}
+        {/*          })*/}
+        {/*        ) || []*/}
+        {/*      }*/}
+        {/*    />*/}
+        {/*  </>*/}
+        {/*)}*/}
+        {/*{isBounty && (*/}
+        {/*  <>*/}
+        {/*    <PostBountyInfo onchainLink={definedOnchainLink as OnchainLinkBountyFragment} />*/}
+        {/*    <Timeline*/}
+        {/*      statuses={*/}
+        {/*        bountyPost?.onchain_link?.onchain_bounty?.[0]?.bountyStatus?.map((s) => ({*/}
+        {/*          blockNumber: s.blockNumber?.number || 0,*/}
+        {/*          status: s.status || ''*/}
+        {/*        })) || []*/}
+        {/*      }*/}
+        {/*    />*/}
+        {/*  </>*/}
+        {/*)}*/}
+        {/*{isMotion && (*/}
+        {/*  <>*/}
+        {/*    <PostMotionInfo onchainLink={definedOnchainLink as OnchainLinkMotionFragment} />*/}
+        {/*    <Timeline*/}
+        {/*      statuses={*/}
+        {/*        motionPost?.onchain_link?.onchain_motion?.[0]?.motionStatus?.map((s) => ({*/}
+        {/*          blockNumber: s.blockNumber?.number || 0,*/}
+        {/*          status: s.status || ''*/}
+        {/*        })) || []*/}
+        {/*      }*/}
+        {/*    />*/}
+        {/*  </>*/}
+        {/*)}*/}
+        {/*{isProposal && (*/}
+        {/*  <>*/}
+        {/*    <PostProposalInfo onchainLink={definedOnchainLink as OnchainLinkProposalFragment} />*/}
+        {/*    <Timeline*/}
+        {/*      statuses={*/}
+        {/*        proposalPost?.onchain_link?.onchain_proposal?.[0]?.proposalStatus?.map((s) => ({*/}
+        {/*          blockNumber: s.blockNumber?.number || 0,*/}
+        {/*          status: s.status || ''*/}
+        {/*        })) || []*/}
+        {/*      }*/}
+        {/*    />*/}
+        {/*  </>*/}
+        {/*)}*/}
         {isReferendum && (
           <>
-            <PostReferendumInfo onchainLink={definedOnchainLink as OnchainLinkReferendumFragment} />
-            <Timeline
-              statuses={
-                referendumPost?.onchain_link?.onchain_referendum?.[0]?.referendumStatus?.map(
-                  (s) => ({
-                    blockNumber: s.blockNumber?.number || 0,
-                    status: s.status || ''
-                  })
-                ) || []
-              }
-            />
+            <PostReferendumInfo onchainLink={referendumPost as DeriveReferendum} />
+            {/*<Timeline*/}
+            {/*  statuses={*/}
+            {/*    referendumPost?.onchain_link?.onchain_referendum?.[0]?.referendumStatus?.map(*/}
+            {/*      (s) => ({*/}
+            {/*        blockNumber: s.blockNumber?.number || 0,*/}
+            {/*        status: s.status || ''*/}
+            {/*      })*/}
+            {/*    ) || []*/}
+            {/*  }*/}
+            {/*/>*/}
           </>
         )}
-        {isTreasuryProposal && (
-          <>
-            <PostTreasuryInfo
-              onchainLink={definedOnchainLink as OnchainLinkTreasuryProposalFragment}
-            />
-            <Timeline
-              statuses={
-                treasuryPost?.onchain_link?.onchain_treasury_spend_proposal?.[0]?.treasuryStatus?.map(
-                  (s) => ({
-                    blockNumber: s.blockNumber?.number || 0,
-                    status: s.status || ''
-                  })
-                ) || []
-              }
-            />
-          </>
-        )}
-        {isTipProposal && (
-          <>
-            <PostTipInfo onchainLink={definedOnchainLink as OnchainLinkTipFragment} />
-            <Timeline
-              statuses={
-                tipPost?.onchain_link?.onchain_tip?.[0]?.tipStatus?.map((s) => ({
-                  blockNumber: s.blockNumber?.number || 0,
-                  status: s.status || ''
-                })) || []
-              }
-            />
-          </>
-        )}
-        {redirection.link && (
-          <Card className="timelineCard">
-            <Icon name="forward" /> Became{' '}
-            <Link className="redirection" to={redirection.link}>
-              <span className="redirectionText">{redirection.text}</span>
-            </Link>
-          </Card>
-        )}
+        {/*{isTreasuryProposal && (*/}
+        {/*  <>*/}
+        {/*    <PostTreasuryInfo*/}
+        {/*      onchainLink={definedOnchainLink as OnchainLinkTreasuryProposalFragment}*/}
+        {/*    />*/}
+        {/*    <Timeline*/}
+        {/*      statuses={*/}
+        {/*        treasuryPost?.onchain_link?.onchain_treasury_spend_proposal?.[0]?.treasuryStatus?.map(*/}
+        {/*          (s) => ({*/}
+        {/*            blockNumber: s.blockNumber?.number || 0,*/}
+        {/*            status: s.status || ''*/}
+        {/*          })*/}
+        {/*        ) || []*/}
+        {/*      }*/}
+        {/*    />*/}
+        {/*  </>*/}
+        {/*)}*/}
+        {/*{isTipProposal && (*/}
+        {/*  <>*/}
+        {/*    <PostTipInfo onchainLink={definedOnchainLink as OnchainLinkTipFragment} />*/}
+        {/*    <Timeline*/}
+        {/*      statuses={*/}
+        {/*        tipPost?.onchain_link?.onchain_tip?.[0]?.tipStatus?.map((s) => ({*/}
+        {/*          blockNumber: s.blockNumber?.number || 0,*/}
+        {/*          status: s.status || ''*/}
+        {/*        })) || []*/}
+        {/*      }*/}
+        {/*    />*/}
+        {/*  </>*/}
+        {/*)}*/}
+        {/*{redirection.link && (*/}
+        {/*  <Card className="timelineCard">*/}
+        {/*    <Icon name="forward" /> Became{' '}*/}
+        {/*    <Link className="redirection" to={redirection.link}>*/}
+        {/*      <span className="redirectionText">{redirection.text}</span>*/}
+        {/*    </Link>*/}
+        {/*  </Card>*/}
+        {/*)}*/}
         <Responsive maxWidth={Responsive.onlyTablet.maxWidth}>
           <Sidebar />
         </Responsive>
-        {!!post.comments?.length && <Comments comments={post.comments} refetch={refetch} />}
-        {id && <CreatePostComment postId={post.id} refetch={refetch} />}
+        {/*{!!post.comments?.length && <Comments comments={post.comments} refetch={refetch} />}*/}
+        {/*{id && <CreatePostComment postId={post.id} refetch={refetch} />}*/}
       </Grid.Column>
       <Grid.Column mobile={16} tablet={16} computer={6} largeScreen={6}>
         <Responsive minWidth={Responsive.onlyComputer.minWidth}>

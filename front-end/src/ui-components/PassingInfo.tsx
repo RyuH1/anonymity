@@ -32,21 +32,21 @@ const PassingInfo = ({ className, isPassing }: Props) => {
 }
 
 export default styled(PassingInfo)`
-  background-color: ${({ theme }) => theme.colors.grey_secondary}
+  background-color: ${({ theme }) => theme.colors.grey_secondary};
   padding: 2rem 3rem 2rem 3rem;
   border-radius: 3px;
   margin-bottom: 1rem;
-  font-size: lg;
+  font-size: ${({ theme }) => theme.fontSizes.lg};
   color: white;
   text-align: center;
   transition-duration: 1s;
-  box-shadow: box_shadow_card;
+  box-shadow: ${({ theme }) => theme.colors.box_shadow_card};
 
   &.passing {
     background-color: ${({ theme }) => theme.colors.green_primary};
   }
 
   &.failing {
-    background-color: red_primary;
+    background-color: ${({ theme }) => theme.colors.red_primary};
   }
 `

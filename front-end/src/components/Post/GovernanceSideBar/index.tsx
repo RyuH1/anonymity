@@ -19,14 +19,14 @@ import {
 } from 'src/generated/graphql'
 import { APPNAME } from 'src/global/appName'
 import { motionStatus, proposalStatus, referendumStatus, tipStatus } from 'src/global/statuses'
-import { VoteThreshold } from 'src/types'
+// import { VoteThreshold } from 'src/types'
 import { Form } from 'src/ui-components/Form'
 
 import ExtensionNotDetected from '../../ExtensionNotDetected'
-import EndorseTip from './EndorseTip'
-import MotionVoteInfo from './Motions/MotionVoteInfo'
-import VoteMotion from './Motions/VoteMotion'
-import ProposalDisplay from './Proposals'
+// import EndorseTip from './EndorseTip'
+// import MotionVoteInfo from './Motions/MotionVoteInfo'
+// import VoteMotion from './Motions/VoteMotion'
+// import ProposalDisplay from './Proposals'
 import ReferendumVoteInfo from './Referenda/ReferendumVoteInfo'
 import VoteReferendum from './Referenda/VoteReferendum'
 
@@ -41,6 +41,7 @@ interface Props {
   isTechCommitteeProposal?: boolean
   onchainId?: string | number | null
   onchainLink?:
+    | { threshold: any }
     | OnchainLinkTechCommitteeProposalFragment
     | OnchainLinkBountyFragment
     | OnchainLinkMotionFragment
@@ -53,10 +54,10 @@ interface Props {
 
 const GovenanceSideBar = ({
   className,
-  isMotion,
-  isProposal,
+  // isMotion,
+  // isProposal,
   isReferendum,
-  isTipProposal,
+  // isTipProposal,
   onchainId,
   onchainLink,
   status
@@ -151,45 +152,46 @@ const GovenanceSideBar = ({
       {canVote ? (
         <div className={className}>
           <Form standalone={false}>
-            {isMotion && (
-              <>
-                {(onchainId || onchainId === 0) && (
-                  <MotionVoteInfo motionId={onchainId as number} />
-                )}
-                {canVote && (
-                  <VoteMotion
-                    accounts={accounts}
-                    address={address}
-                    getAccounts={getAccounts}
-                    motionId={onchainId as number}
-                    motionProposalHash={
-                      (onchainLink as OnchainLinkMotionFragment)?.onchain_motion?.[0]
-                        ?.motionProposalHash
-                    }
-                    onAccountChange={onAccountChange}
-                  />
-                )}
-              </>
-            )}
-            {isProposal && (
-              <ProposalDisplay
-                accounts={accounts}
-                address={address}
-                canVote={canVote}
-                getAccounts={getAccounts}
-                onAccountChange={onAccountChange}
-                proposalId={onchainId as number}
-              />
-            )}
+            {/*{isMotion && (*/}
+            {/*  <>*/}
+            {/*    {(onchainId || onchainId === 0) && (*/}
+            {/*      <MotionVoteInfo motionId={onchainId as number} />*/}
+            {/*    )}*/}
+            {/*    {canVote && (*/}
+            {/*      <VoteMotion*/}
+            {/*        accounts={accounts}*/}
+            {/*        address={address}*/}
+            {/*        getAccounts={getAccounts}*/}
+            {/*        motionId={onchainId as number}*/}
+            {/*        motionProposalHash={*/}
+            {/*          (onchainLink as OnchainLinkMotionFragment)?.onchain_motion?.[0]*/}
+            {/*            ?.motionProposalHash*/}
+            {/*        }*/}
+            {/*        onAccountChange={onAccountChange}*/}
+            {/*      />*/}
+            {/*    )}*/}
+            {/*  </>*/}
+            {/*)}*/}
+            {/*{isProposal && (*/}
+            {/*  <ProposalDisplay*/}
+            {/*    accounts={accounts}*/}
+            {/*    address={address}*/}
+            {/*    canVote={canVote}*/}
+            {/*    getAccounts={getAccounts}*/}
+            {/*    onAccountChange={onAccountChange}*/}
+            {/*    proposalId={onchainId as number}*/}
+            {/*  />*/}
+            {/*)}*/}
             {isReferendum && (
               <>
                 {(onchainId || onchainId === 0) && (
                   <ReferendumVoteInfo
                     referendumId={onchainId as number}
-                    threshold={
-                      (onchainLink as OnchainLinkReferendumFragment).onchain_referendum[0]
-                        ?.voteThreshold as VoteThreshold
-                    }
+                    // threshold={
+                    //   (onchainLink as OnchainLinkReferendumFragment).onchain_referendum[0]
+                    //     ?.voteThreshold as VoteThreshold
+                    // }
+                    threshold={(onchainLink as { threshold: any }).threshold}
                   />
                 )}
                 {canVote && (
@@ -203,15 +205,15 @@ const GovenanceSideBar = ({
                 )}
               </>
             )}
-            {isTipProposal && canVote && (
-              <EndorseTip
-                accounts={accounts}
-                address={address}
-                getAccounts={getAccounts}
-                tipHash={onchainId as string}
-                onAccountChange={onAccountChange}
-              />
-            )}
+            {/*{isTipProposal && canVote && (*/}
+            {/*  <EndorseTip*/}
+            {/*    accounts={accounts}*/}
+            {/*    address={address}*/}
+            {/*    getAccounts={getAccounts}*/}
+            {/*    tipHash={onchainId as string}*/}
+            {/*    onAccountChange={onAccountChange}*/}
+            {/*  />*/}
+            {/*)}*/}
           </Form>
         </div>
       ) : null}
