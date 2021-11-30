@@ -113,8 +113,6 @@ impl<
 				self.nays = self.nays.checked_add(&nay.votes)?;
 			},
 			AccountVote::Mixed { aye, nay } => {
-				let aye = aye.1.votes(aye.0);
-				let nay = nay.1.votes(nay.0);
 				self.turnout = self.turnout.checked_add(&aye.capital)?.checked_add(&nay.capital)?;
 				self.ayes = self.ayes.checked_add(&aye.votes)?;
 				self.nays = self.nays.checked_add(&nay.votes)?;
@@ -142,8 +140,6 @@ impl<
 				self.nays = self.nays.checked_sub(&nay.votes)?;
 			},
 			AccountVote::Mixed { aye, nay } => {
-				let aye = aye.1.votes(aye.0);
-				let nay = nay.1.votes(nay.0);
 				self.turnout = self.turnout.checked_sub(&aye.capital)?.checked_sub(&nay.capital)?;
 				self.ayes = self.ayes.checked_sub(&aye.votes)?;
 				self.nays = self.nays.checked_sub(&nay.votes)?;
