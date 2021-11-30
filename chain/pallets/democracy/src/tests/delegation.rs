@@ -177,3 +177,33 @@ fn split_vote_delegation_should_be_ignored() {
 		assert_eq!(tally(r), Tally { ayes: 1, nays: 0, turnout: 10 });
 	});
 }
+
+#[test]
+fn mixed_vote_should_equal_to_total_delegation() {
+	new_test_ext().execute_with(|| {
+		let r = begin_referendum();
+		assert_ok!(Democracy::delegate(Origin::signed(2), 1, Conviction::Locked6x, 20));
+		assert_noop!(Democracy::vote(Origin::signed(1), r, AccountVote::Mixed { aye: Conviction::Locked6x.votes::<u64>(1), nay: Delegations::default() }), Error::<Test>::InvalidMixedVoteValue);
+		assert_ok!(Democracy::vote(Origin::signed(1), r, AccountVote::Mixed { aye: Conviction::Locked6x.votes::<u64>(20), nay: Delegations::default() }));
+	});
+}
+
+#[test]
+fn delegation_with_ongoing_mixed_vote_should_fail() {
+	new_test_ext().execute_with(|| {
+		let r = begin_referendum();
+		assert_ok!(Democracy::delegate(Origin::signed(2), 1, Conviction::Locked6x, 20));
+		assert_ok!(Democracy::vote(Origin::signed(1), r, AccountVote::Mixed { aye: Conviction::Locked6x.votes::<u64>(20), nay: Delegations::default() }));
+		assert_noop!(Democracy::delegate(Origin::signed(3), 1, Conviction::Locked6x, 20), Error::<Test>::InappropriateTiming);
+	});
+}
+
+#[test]
+fn undelegation_with_ongoing_mixed_vote_should_fail() {
+	new_test_ext().execute_with(|| {
+		let r = begin_referendum();
+		assert_ok!(Democracy::delegate(Origin::signed(2), 1, Conviction::Locked6x, 20));
+		assert_ok!(Democracy::vote(Origin::signed(1), r, AccountVote::Mixed { aye: Conviction::Locked6x.votes::<u64>(20), nay: Delegations::default() }));
+		assert_noop!(Democracy::undelegate(Origin::signed(2)), Error::<Test>::InappropriateTiming);
+	});
+}

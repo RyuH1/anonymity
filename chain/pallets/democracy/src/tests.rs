@@ -21,7 +21,7 @@ use super::*;
 use crate as pallet_democracy;
 use codec::Encode;
 use frame_support::{
-	assert_noop, assert_ok, ord_parameter_types, parameter_types,
+	assert_noop, assert_ok, assert_err, ord_parameter_types, parameter_types,
 	traits::{Contains, EqualPrivilegeOnly, GenesisBuild, OnInitialize, SortedMembers},
 	weights::Weight,
 };
