@@ -43,6 +43,25 @@ const ReferendumPost = () => {
         console.error(e)
         setError(e)
       })
+
+    let refFinUnsub: () => void
+    api.derive.democracy
+      .referendumsFinished((refFin) => {
+        const reffin0 = refFin[0]
+        console.log(refFin)
+        api.query.democracy
+          .preimages(reffin0.hash)
+          .then((opt) => console.log(opt))
+          .catch((e) => console.error(e))
+      })
+      .then((unsub) => {
+        refFinUnsub = unsub
+      })
+      .catch((e) => {
+        console.error(e)
+      })
+
+    return () => refFinUnsub && refFinUnsub()
   }, [api, apiReady, idNumber])
 
   if (error?.message) return <FilteredError text={error.message} />

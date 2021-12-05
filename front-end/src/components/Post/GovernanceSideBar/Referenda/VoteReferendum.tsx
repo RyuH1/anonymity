@@ -6,7 +6,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import styled from '@xstyled/styled-components'
 import BN from 'bn.js'
 import React, { useContext, useMemo, useState } from 'react'
-import { DropdownProps, Select } from 'semantic-ui-react'
+import { Checkbox, DropdownProps, Select } from 'semantic-ui-react'
 import { ApiContext } from 'src/context/ApiContext'
 import { NotificationContext } from 'src/context/NotificationContext'
 import { LoadingStatusType, NotificationStatus } from 'src/types'
@@ -19,6 +19,7 @@ import Loader from 'src/ui-components/Loader'
 
 import AccountSelectionForm from '../../../../ui-components/AccountSelectionForm'
 import AyeNayButtons from '../../../../ui-components/AyeNayButtons'
+import DelegateeSelectionForm from '../../../../ui-components/DelegateeSelectionForm'
 
 interface Props {
   className?: string
@@ -146,6 +147,35 @@ const VoteRefrendum = ({
     </Form.Field>
   )
 
+  const [useDelegation, setUseDelegation] = useState<boolean>(false)
+
+  const DelegationSwitch = () => (
+    <Form.Field>
+      <label>Vote using anonymous delegation</label>
+      <Checkbox
+        label="Use delegation"
+        disabled={false}
+        checked={useDelegation}
+        toggle
+        onChange={() => setUseDelegation(!useDelegation)}
+      />
+    </Form.Field>
+  )
+
+  const delegatees: {
+    name: string
+    url: string
+  }[] = [
+    {
+      name: 'Geode Endpoint 1',
+      url: 'https://foo.bar'
+    },
+    {
+      name: 'Geode Endpoint 2',
+      url: 'https://fizz.buzz'
+    }
+  ]
+
   return (
     <div className={className}>
       {noAccount ? (
@@ -170,6 +200,15 @@ const VoteRefrendum = ({
             onChange={onBalanceChange}
           />
           <VoteLock />
+          <DelegationSwitch />
+          {useDelegation && (
+            <DelegateeSelectionForm
+              delegatees={delegatees}
+              onDelegateeChange={(event, data) => {
+                console.log('Selected Geode', data.value)
+              }}
+            />
+          )}
           <AyeNayButtons
             disabled={!apiReady}
             onClickAye={() => voteRefrendum(true)}
