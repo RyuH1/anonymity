@@ -155,3 +155,8 @@ export interface ReactionMapFields {
   count: number
   userNames: string[]
 }
+
+export interface Delegatee {
+  name: string
+  url: string
+}

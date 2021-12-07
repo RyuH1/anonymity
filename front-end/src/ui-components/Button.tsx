@@ -14,12 +14,12 @@ export default styled(Button)`
   &.ui.button,
   &.active,
   &:active {
-    font-family: font_default;
-    font-size: md;
+    font-family: ${({ theme }) => theme.fonts.font_default};
+    font-size: ${({ theme }) => theme.fontSizes.md};
     font-weight: 500;
     letter-spacing: 0.06rem;
     line-height: 1.6rem;
-    border-radius: button_radius;
+    border-radius: ${({ theme }) => theme.radii.button_radius};
     border: none;
     padding: 0.8rem 1.6rem;
     transition-property: background-color;
@@ -29,19 +29,19 @@ export default styled(Button)`
       padding: 0.6rem 1.2rem;
     }
     &.ui.small.button {
-      font-size: md;
+      font-size: ${({ theme }) => theme.fontSizes.md};
       padding: 0.6rem 1.2rem;
     }
     &.ui.medium.button {
-      font-size: md;
+      font-size: ${({ theme }) => theme.fontSizes.md};
       padding: 0.8rem 1.6rem;
     }
     &.ui.large.button {
-      font-size: lg;
+      font-size: ${({ theme }) => theme.fontSizes.lg};
       padding: 1.2rem 2rem;
     }
     &.ui.primary.button {
-      background-color: pink_primary;
+      background-color: ${({ theme }) => theme.colors.pink_primary};
       color: white;
       &:hover,
       &:focus {
@@ -50,23 +50,23 @@ export default styled(Button)`
       }
     }
     &.ui.primary.positive.button {
-      background-color: green_primary !important;
+      background-color: ${({ theme }) => theme.colors.green_primary} !important;
       color: white !important;
       &:hover,
       &:focus {
-        background-color: green_secondary !important;
+        background-color: ${({ theme }) => theme.colors.green_secondary} !important;
         color: white !important;
         box-shadow: none !important;
         outline: none;
       }
     }
     &.ui.primary.negative.button {
-      background-color: red_primary !important;
+      background-color: ${({ theme }) => theme.colors.red_primary} !important;
       color: white !important;
       box-shadow: none !important;
       &:hover,
       &:focus {
-        background-color: red_secondary !important;
+        background-color: ${({ theme }) => theme.colors.red_secondary} !important;
         color: white !important;
         box-shadow: none !important;
         outline: none;
@@ -80,7 +80,7 @@ export default styled(Button)`
       &:focus {
         color: ${({ theme }) => theme.colors.black_text};
         background-color: ${({ theme }) => theme.colors.grey_light};
-        box-shadow: box_shadow_sec_btn !important;
+        box-shadow: ${({ theme }) => theme.colors.box_shadow_sec_btn} !important;
         outline: none;
       }
     }
@@ -90,9 +90,9 @@ export default styled(Button)`
       box-shadow: 0 0 0 1px inset !important;
       &:hover,
       &:focus {
-        background-color: red_secondary;
+        background-color: ${({ theme }) => theme.colors.red_secondary};
         color: white;
-        box-shadow: box_shadow_sec_btn_neg;
+        box-shadow: ${({ theme }) => theme.colors.box_shadow_sec_btn_neg};
         outline: none;
       }
     }
@@ -104,7 +104,7 @@ export default styled(Button)`
       padding: 0.7rem 0.7rem;
       margin: 0 0.4rem 0 0;
       text-transform: none;
-      letter-spacing: 0rem;
+      letter-spacing: 0;
       border-radius: 0.2rem;
       &:hover {
         background-color: ${({ theme }) => theme.colors.grey_light};
@@ -116,14 +116,14 @@ export default styled(Button)`
     }
     &.ui.social.negative.button {
       background-color: white;
-      color: red_primary;
+      color: ${({ theme }) => theme.colors.red_primary};
       font-size: ${({ theme }) => theme.fontSizes.sm};
       border: none;
       padding: 0.7rem 0.7rem;
       text-transform: none;
-      letter-spacing: 0rem;
+      letter-spacing: 0;
       &:hover {
-        background-color: red_light;
+        background-color: ${({ theme }) => theme.colors.red_light};
         border: none;
       }
     }
@@ -137,6 +137,6 @@ export default styled(Button)`
 
   .icon {
     vertical-align: middle;
-    font-size: md;
+    font-size: ${({ theme }) => theme.fontSizes.md};
   }
 `

@@ -2,14 +2,17 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
+import { web3FromSource } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
+import { stringToHex } from '@polkadot/util'
 import styled from '@xstyled/styled-components'
 import BN from 'bn.js'
 import React, { useContext, useMemo, useState } from 'react'
 import { Checkbox, DropdownProps, Select } from 'semantic-ui-react'
+import Icon from 'semantic-ui-react/dist/commonjs/elements/Icon'
 import { ApiContext } from 'src/context/ApiContext'
 import { NotificationContext } from 'src/context/NotificationContext'
-import { LoadingStatusType, NotificationStatus } from 'src/types'
+import { Delegatee, LoadingStatusType, NotificationStatus } from 'src/types'
 import BalanceInput from 'src/ui-components/BalanceInput'
 import Button from 'src/ui-components/Button'
 import Card from 'src/ui-components/Card'
@@ -20,6 +23,17 @@ import Loader from 'src/ui-components/Loader'
 import AccountSelectionForm from '../../../../ui-components/AccountSelectionForm'
 import AyeNayButtons from '../../../../ui-components/AyeNayButtons'
 import DelegateeSelectionForm from '../../../../ui-components/DelegateeSelectionForm'
+
+const DELEGATEES: Delegatee[] = [
+  {
+    name: 'Geode Endpoint (EVE)',
+    url: '5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw'
+  },
+  {
+    name: 'Geode Endpoint (FERDIE)',
+    url: '5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL'
+  }
+]
 
 interface Props {
   className?: string
@@ -45,6 +59,9 @@ const VoteRefrendum = ({
     isLoading: false,
     message: ''
   })
+  const [selectedDelegatee, setSelectedDelegatee] = useState<Delegatee>(DELEGATEES[0])
+  const [delegated, setDelegated] = useState<boolean>(false)
+
   const CONVICTIONS: [number, number][] = [1, 2, 4, 8, 16, 32].map((lock, index) => [
     index + 1,
     lock
@@ -70,6 +87,7 @@ const VoteRefrendum = ({
   }
 
   const onBalanceChange = (balance: BN) => setLockedBalance(balance)
+
   const voteRefrendum = async (aye: boolean) => {
     if (!referendumId && referendumId !== 0) {
       console.error('referendumId not set')
@@ -119,6 +137,102 @@ const VoteRefrendum = ({
       })
   }
 
+  const onClickDelegateVote = () => {
+    if (!api || !apiReady || !lockedBalance) return
+
+    setLoadingStatus({ isLoading: true, message: 'Waiting for signature' })
+
+    const delegateTx = api.tx.democracy.delegate(selectedDelegatee.url, conviction, lockedBalance)
+
+    delegateTx
+      .signAndSend(address, ({ status }) => {
+        if (status.isInBlock) {
+          setDelegated(true)
+          setLoadingStatus({ isLoading: false, message: '' })
+          queueNotification({
+            header: 'Success!',
+            message: `Vote on referendum #${referendumId} will be delegated to ${selectedDelegatee.name}.`, // eslint-disable-line max-len
+            status: NotificationStatus.SUCCESS
+          })
+          console.log(`Completed at block hash #${status.asInBlock.toString()}`)
+        } else {
+          if (status.isBroadcast) {
+            setLoadingStatus({ isLoading: true, message: 'Broadcasting the delegation' })
+          }
+          console.log(`Current status: ${status.type}`)
+        }
+      })
+      .catch((error) => {
+        setDelegated(false)
+        setLoadingStatus({ isLoading: false, message: '' })
+        console.log(':( transaction failed')
+        console.error('ERROR:', error)
+        queueNotification({
+          header: 'Failed!',
+          message: error.message,
+          status: NotificationStatus.ERROR
+        })
+      })
+  }
+
+  // TODO Finalize this function when Geode RPC endpoint has been ready to implement
+  const voteReferendumUsingDelegation = async (aye: boolean) => {
+    if (!referendumId && referendumId !== 0) {
+      console.error('referendumId not set')
+      return
+    }
+
+    if (!api || !apiReady) {
+      return
+    }
+
+    setLoadingStatus({ isLoading: true, message: 'Waiting for signature' })
+
+    const connectedAccountWithMeta = accounts.filter((account) => account.address === address)[0]
+    const {
+      meta: { source }
+    } = connectedAccountWithMeta
+
+    const injector = await web3FromSource(source)
+    const { signRaw } = injector.signer
+
+    if (signRaw) {
+      const voteMessage = {
+        approve: aye,
+        index: referendumId,
+        sender: address
+      }
+      console.log(JSON.stringify(voteMessage))
+
+      const { signature } = await signRaw({
+        address: address,
+        data: stringToHex(JSON.stringify(voteMessage)),
+        type: 'bytes'
+      })
+
+      console.log('signature', signature)
+
+      setLoadingStatus({ isLoading: false, message: '' })
+    }
+  }
+
+  const onDelegateeChange = (
+    event: React.SyntheticEvent<HTMLElement, Event>,
+    data: DropdownProps
+  ) => {
+    const delegateeValues = Object.values(DELEGATEES)
+    let selectedDelegateeIndex = 0
+    for (const key of Object.keys(delegateeValues)) {
+      if (delegateeValues[Number(key)].url === data.value) {
+        selectedDelegateeIndex = Number(key)
+        break
+      }
+    }
+
+    setSelectedDelegatee(DELEGATEES[selectedDelegateeIndex])
+    setDelegated(false)
+  }
+
   const GetAccountsButton = () => (
     <Form.Group>
       <Form.Field className="button-container">
@@ -157,24 +271,16 @@ const VoteRefrendum = ({
         disabled={false}
         checked={useDelegation}
         toggle
-        onChange={() => setUseDelegation(!useDelegation)}
+        onChange={() => {
+          setUseDelegation(!useDelegation)
+
+          if (!useDelegation) {
+            setDelegated(false)
+          }
+        }}
       />
     </Form.Field>
   )
-
-  const delegatees: {
-    name: string
-    url: string
-  }[] = [
-    {
-      name: 'Geode Endpoint 1',
-      url: 'https://foo.bar'
-    },
-    {
-      name: 'Geode Endpoint 2',
-      url: 'https://fizz.buzz'
-    }
-  ]
 
   return (
     <div className={className}>
@@ -203,17 +309,39 @@ const VoteRefrendum = ({
           <DelegationSwitch />
           {useDelegation && (
             <DelegateeSelectionForm
-              delegatees={delegatees}
-              onDelegateeChange={(event, data) => {
-                console.log('Selected Geode', data.value)
-              }}
+              delegatees={DELEGATEES}
+              defaultDelegatee={selectedDelegatee}
+              onDelegateeChange={onDelegateeChange}
             />
           )}
-          <AyeNayButtons
-            disabled={!apiReady}
-            onClickAye={() => voteRefrendum(true)}
-            onClickNay={() => voteRefrendum(false)}
-          />
+          {useDelegation ? (
+            !delegated ? (
+              <Form.Field className={'button-container'}>
+                <Button
+                  fluid
+                  basic
+                  className="primary"
+                  disabled={!apiReady}
+                  onClick={() => onClickDelegateVote()}
+                >
+                  <Icon name="user secret" />
+                  Delegate Anonymous Vote
+                </Button>
+              </Form.Field>
+            ) : (
+              <AyeNayButtons
+                disabled={!apiReady}
+                onClickAye={() => voteReferendumUsingDelegation(true)}
+                onClickNay={() => voteReferendumUsingDelegation(false)}
+              />
+            )
+          ) : (
+            <AyeNayButtons
+              disabled={!apiReady}
+              onClickAye={() => voteRefrendum(true)}
+              onClickNay={() => voteRefrendum(false)}
+            />
+          )}
         </Card>
       )}
     </div>

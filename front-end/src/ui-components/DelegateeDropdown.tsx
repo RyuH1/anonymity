@@ -7,10 +7,12 @@ import React, { useState } from 'react'
 import { Dropdown, DropdownItemProps, DropdownProps } from 'semantic-ui-react'
 import Address from 'src/ui-components/Address'
 
+import { Delegatee } from '../types'
+
 interface Props {
-  delegatees: { name: string; url: string }[]
+  delegatees: Delegatee[]
   className?: string
-  defaultDelegatee: { name: string; url: string }
+  defaultDelegatee: Delegatee
   filterAccounts?: string[]
   onDelegateeChange: (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void
 }

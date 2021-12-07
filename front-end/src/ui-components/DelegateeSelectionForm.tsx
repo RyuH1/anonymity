@@ -7,11 +7,13 @@ import React from 'react'
 import { DropdownProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown'
 import { Form } from 'src/ui-components/Form'
 
+import { Delegatee } from '../types'
 import DelegateeDropdown from './DelegateeDropdown'
 import HelperTooltip from './HelperTooltip'
 
 interface Props {
-  delegatees: { name: string; url: string }[]
+  delegatees: Delegatee[]
+  defaultDelegatee: Delegatee
   className?: string
   onDelegateeChange: (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void
   title?: string
@@ -20,6 +22,7 @@ interface Props {
 
 const DelegateeSelectionForm = ({
   delegatees,
+  defaultDelegatee,
   className,
   onDelegateeChange,
   title,
@@ -36,7 +39,7 @@ const DelegateeSelectionForm = ({
     )}
     <DelegateeDropdown
       delegatees={delegatees}
-      defaultDelegatee={delegatees[0]}
+      defaultDelegatee={defaultDelegatee}
       onDelegateeChange={onDelegateeChange}
     />
   </Form.Field>

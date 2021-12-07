@@ -6,13 +6,13 @@ import styled from '@xstyled/styled-components'
 import React from 'react'
 import { Grid } from 'semantic-ui-react'
 
-import BountyContainer from './LatestBounties'
-import MotionsContainer from './LatestMotions'
-import ProposalContainer from './LatestProposals'
+// import BountyContainer from './LatestBounties'
+// import MotionsContainer from './LatestMotions'
+// import ProposalContainer from './LatestProposals'
 import ReferendaContainer from './LatestReferenda'
-import TechCommitteeProposals from './LatestTechCommitteeProposals'
-import TipContainer from './LatestTips'
-import TreasuryContainer from './LatestTreasury'
+// import TechCommitteeProposals from './LatestTechCommitteeProposals'
+// import TipContainer from './LatestTips'
+// import TreasuryContainer from './LatestTreasury'
 // import DiscussionContainer from './LatestDiscussions'
 // import { useContext } from 'react'
 // import DefaultAddressInfoBox from '../../components/DefaultAddressInfoBox'
@@ -38,18 +38,18 @@ const Home = ({ className }: Props) => {
         <Grid.Column mobile={16} tablet={16} computer={10}>
           <h3>Current referenda</h3>
           <ReferendaContainer className="referendumContainer" />
-          <h3>Latest proposals</h3>
-          <ProposalContainer className="proposalContainer" />
-          <h3>Latest motions</h3>
-          <MotionsContainer className="motionContainer" />
-          <h3>Latest treasury proposals</h3>
-          <TreasuryContainer className="treasuryContainer" />
-          <h3>Latest tips</h3>
-          <TipContainer className="tipContainer" />
-          <h3>Latest Bounties</h3>
-          <BountyContainer className="bountyContainer" />
-          <h3>Latest Technical committee proposals</h3>
-          <TechCommitteeProposals className="techCommitteeProposalContainer" />
+          {/*<h3>Latest proposals</h3>*/}
+          {/*<ProposalContainer className="proposalContainer" />*/}
+          {/*<h3>Latest motions</h3>*/}
+          {/*<MotionsContainer className="motionContainer" />*/}
+          {/*<h3>Latest treasury proposals</h3>*/}
+          {/*<TreasuryContainer className="treasuryContainer" />*/}
+          {/*<h3>Latest tips</h3>*/}
+          {/*<TipContainer className="tipContainer" />*/}
+          {/*<h3>Latest Bounties</h3>*/}
+          {/*<BountyContainer className="bountyContainer" />*/}
+          {/*<h3>Latest Technical committee proposals</h3>*/}
+          {/*<TechCommitteeProposals className="techCommitteeProposalContainer" />*/}
           {/*<h3>Latest discussions</h3>*/}
           {/*<DiscussionContainer className="discussionContainer" />*/}
         </Grid.Column>
