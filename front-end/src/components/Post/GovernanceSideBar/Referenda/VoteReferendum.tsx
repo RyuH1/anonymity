@@ -210,9 +210,25 @@ const VoteRefrendum = ({
         type: 'bytes'
       })
 
-      console.log('signature', signature)
+      const requestOptions = {
+        body: JSON.stringify({
+          msg: { ...voteMessage },
+          signature
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      }
 
-      setLoadingStatus({ isLoading: false, message: '' })
+      try {
+        const response = await fetch(process.env.REACT_APP_GEODE_ENDPOINT!, requestOptions)
+        console.log('Geode Response', await response.json())
+      } catch (e) {
+        console.error('Geode Error', e)
+      } finally {
+        setLoadingStatus({ isLoading: false, message: '' })
+      }
     }
   }
 
