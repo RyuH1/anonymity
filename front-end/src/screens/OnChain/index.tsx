@@ -8,13 +8,13 @@ import { Link } from 'react-router-dom'
 import { Grid, Icon } from 'semantic-ui-react'
 
 import InfoBox from '../../ui-components/InfoBox'
-import BountyContainer from './Bounties'
-import MotionContainer from './Motions'
-import ProposalContainer from './Proposals'
 import ReferendaContainer from './Referenda'
-import TechCommitteeProposalsContainer from './TechCommitteeProposals'
-import TipContainer from './Tips'
-import TreasuryContainer from './Treasury'
+// import BountyContainer from './Bounties'
+// import MotionContainer from './Motions'
+// import ProposalContainer from './Proposals'
+// import TechCommitteeProposalsContainer from './TechCommitteeProposals'
+// import TipContainer from './Tips'
+// import TreasuryContainer from './Treasury'
 
 const OnchainPostsContainer = ({ className }: { className?: string }) => {
   const limit = 10
@@ -30,45 +30,45 @@ const OnchainPostsContainer = ({ className }: { className?: string }) => {
             <Icon name="arrow right" />
             See all referenda
           </Link>
-          <h3>Proposals</h3>
-          <ProposalContainer className="proposalContainer" limit={limit} />
-          <Link className="full-listing-link" to="proposals">
-            <Icon name="arrow right" />
-            See all proposals
-          </Link>
-          <h3>Motions</h3>
-          <MotionContainer className="motionContainer" limit={limit} />
-          <Link className="full-listing-link" to="motions">
-            <Icon name="arrow right" />
-            See all motions
-          </Link>
-          <h3>Treasury proposals</h3>
-          <TreasuryContainer className="treasuryContainer" limit={limit} />
-          <Link className="full-listing-link" to="treasury-proposals">
-            <Icon name="arrow right" />
-            See all treasury proposals
-          </Link>
-          <h3>Technical Committee Proposals</h3>
-          <TechCommitteeProposalsContainer
-            className="techCommitteeProposalsContainer"
-            limit={limit}
-          />
-          <Link className="full-listing-link" to="tech-comm-proposals">
-            <Icon name="arrow right" />
-            See all technical committee proposals proposals
-          </Link>
-          <h3>Tips</h3>
-          <TipContainer className="tipContainer" limit={limit} />
-          <Link className="full-listing-link" to="tips">
-            <Icon name="arrow right" />
-            See all tips
-          </Link>
-          <h3>Bounties</h3>
-          <BountyContainer className="bountyContainer" limit={limit} />
-          <Link className="full-listing-link" to="bounties">
-            <Icon name="arrow right" />
-            See all bounties
-          </Link>
+          {/*<h3>Proposals</h3>*/}
+          {/*<ProposalContainer className="proposalContainer" limit={limit} />*/}
+          {/*<Link className="full-listing-link" to="proposals">*/}
+          {/*  <Icon name="arrow right" />*/}
+          {/*  See all proposals*/}
+          {/*</Link>*/}
+          {/*<h3>Motions</h3>*/}
+          {/*<MotionContainer className="motionContainer" limit={limit} />*/}
+          {/*<Link className="full-listing-link" to="motions">*/}
+          {/*  <Icon name="arrow right" />*/}
+          {/*  See all motions*/}
+          {/*</Link>*/}
+          {/*<h3>Treasury proposals</h3>*/}
+          {/*<TreasuryContainer className="treasuryContainer" limit={limit} />*/}
+          {/*<Link className="full-listing-link" to="treasury-proposals">*/}
+          {/*  <Icon name="arrow right" />*/}
+          {/*  See all treasury proposals*/}
+          {/*</Link>*/}
+          {/*<h3>Technical Committee Proposals</h3>*/}
+          {/*<TechCommitteeProposalsContainer*/}
+          {/*  className="techCommitteeProposalsContainer"*/}
+          {/*  limit={limit}*/}
+          {/*/>*/}
+          {/*<Link className="full-listing-link" to="tech-comm-proposals">*/}
+          {/*  <Icon name="arrow right" />*/}
+          {/*  See all technical committee proposals proposals*/}
+          {/*</Link>*/}
+          {/*<h3>Tips</h3>*/}
+          {/*<TipContainer className="tipContainer" limit={limit} />*/}
+          {/*<Link className="full-listing-link" to="tips">*/}
+          {/*  <Icon name="arrow right" />*/}
+          {/*  See all tips*/}
+          {/*</Link>*/}
+          {/*<h3>Bounties</h3>*/}
+          {/*<BountyContainer className="bountyContainer" limit={limit} />*/}
+          {/*<Link className="full-listing-link" to="bounties">*/}
+          {/*  <Icon name="arrow right" />*/}
+          {/*  See all bounties*/}
+          {/*</Link>*/}
         </Grid.Column>
         <Grid.Column mobile={16} tablet={16} computer={6}>
           <InfoBox
