@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "license": "Apache-2.0",
   "private": true,
-  "homepage": "http://polkassembly.io/",
+  "homepage": "http://ryuh1.github.io/anonymity/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/premiurly/polkassembly.git"
+    "url": "git+https://github.com/RyuH1/anonymity.git"
   },
   "bugs": {
-    "url": "https://github.com/premiurly/polkassembly/issues"
+    "url": "https://github.com/RyuH1/anonymity/issues"
   },
   "author": "Premiurly <contact@premiurly.in>",
   "maintainers": [
