@@ -607,8 +607,9 @@ pub mod pallet {
 		MaxVotesReached,
 		/// Maximum number of proposals reached.
 		TooManyProposals,
-		/// Mixer already voted
-		DelegationTooLate,
+		/// Inappropriatet timing for delegation/undelegation due to mixed vote type, the mixer has voted 
+		/// based on your delegation, try again later when the current referendum finished
+		InappropriateTiming,
 		/// Mixed vote power not equal to current delegations
 		InvalidMixedVoteValue,
 		/// Already did mixed vote for the current referendum
@@ -1387,7 +1388,7 @@ impl<T: Config> Pallet<T> {
 							Error::<T>::MaxVotesReached
 						);
 						if let AccountVote::<BalanceOf<T>>::Mixed {aye, nay} = vote {
-							ensure!(aye.1.votes(aye.0).saturating_add(nay.1.votes(nay.0)) == *delegations, Error::<T>::InvalidMixedVoteValue);
+							ensure!(aye.saturating_add(nay) == *delegations, Error::<T>::InvalidMixedVoteValue);
 						}
 						votes.insert(i, (ref_index, vote));
 					},
@@ -1523,7 +1524,7 @@ impl<T: Config> Pallet<T> {
 			for &(ref_index, account_vote) in votes.iter() {
 				if let AccountVote::Mixed { .. } = account_vote {
 					if let Some(ReferendumInfo::Ongoing(..)) = ReferendumInfoOf::<T>::get(ref_index) {
-						return Err(Error::<T>::DelegationTooLate.into());
+						return Err(Error::<T>::InappropriateTiming.into());
 					}
 				}
 			}
@@ -1569,6 +1570,16 @@ impl<T: Config> Pallet<T> {
 			sp_std::mem::swap(&mut old, voting);
 			match old {
 				Voting::Delegating { balance, target, conviction, delegations, mut prior } => {
+					// ensure the target doesn't have an Ongoing Direct Mixed Vote
+					if let Voting::Direct { votes, .. } = VotingOf::<T>::get(&target) {
+						for &(ref_index, account_vote) in votes.iter() {
+							if let AccountVote::Mixed { .. } = account_vote {
+								if let Some(ReferendumInfo::Ongoing(..)) = ReferendumInfoOf::<T>::get(ref_index) {
+									return Err(Error::<T>::InappropriateTiming.into());
+								}
+							}
+						}
+					}
 					// remove any delegation votes to our current target.
 					let votes =
 						Self::reduce_upstream_delegation(&target, conviction.votes(balance));

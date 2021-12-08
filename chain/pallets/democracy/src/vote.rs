@@ -75,7 +75,7 @@ pub enum AccountVote<Balance> {
 	Split { aye: Balance, nay: Balance },
 	/// A mixed vote with balances given for both ways, and with conviction, useful for
 	/// anornymous delegation vote.
-	Mixed { aye: (Balance, Conviction), nay: (Balance, Conviction) },
+	Mixed { aye: Delegations<Balance>, nay: Delegations<Balance> },
 }
 
 impl<Balance: Saturating + Zero> AccountVote<Balance> {
