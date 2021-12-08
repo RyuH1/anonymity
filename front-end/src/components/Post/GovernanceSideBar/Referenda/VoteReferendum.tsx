@@ -4,7 +4,8 @@
 
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
-import { stringToHex } from '@polkadot/util'
+import { Keyring } from '@polkadot/keyring'
+import { stringToHex, u8aToHex } from '@polkadot/util'
 import styled from '@xstyled/styled-components'
 import BN from 'bn.js'
 import React, { useContext, useMemo, useState } from 'react'
@@ -196,36 +197,49 @@ const VoteRefrendum = ({
     const injector = await web3FromSource(source)
     const { signRaw } = injector.signer
 
+    const keyring = new Keyring()
+    const pair = keyring.addFromAddress(address)
+    const sender = u8aToHex(pair.publicKey)
+
     if (signRaw) {
       const voteMessage = {
         approve: aye,
         index: referendumId,
-        sender: address
+        sender
       }
       console.log(JSON.stringify(voteMessage))
 
-      const { signature } = await signRaw({
-        address: address,
-        data: stringToHex(JSON.stringify(voteMessage)),
-        type: 'bytes'
-      })
-
-      const requestOptions = {
-        body: JSON.stringify({
-          msg: { ...voteMessage },
-          signature
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST'
-      }
-
       try {
+        const { signature } = await signRaw({
+          address: address,
+          data: stringToHex(JSON.stringify(voteMessage)),
+          type: 'bytes'
+        })
+
+        const jsonRpcRequest = {
+          id: 1,
+          jsonrpc: '2.0',
+          method: 'submit_vote',
+          params: {
+            msg: { ...voteMessage },
+            signature
+          }
+        }
+
+        console.log(jsonRpcRequest)
+
+        const requestOptions = {
+          body: JSON.stringify(jsonRpcRequest),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST'
+        }
+
         const response = await fetch(process.env.REACT_APP_GEODE_ENDPOINT!, requestOptions)
         console.log('Geode Response', await response.json())
       } catch (e) {
-        console.error('Geode Error', e)
+        console.error(e)
       } finally {
         setLoadingStatus({ isLoading: false, message: '' })
       }
