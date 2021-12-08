@@ -34,6 +34,7 @@ jobs:
       - name: Build distribution files and assets
         run: yarn build
         env:
+          REACT_APP_NETWORK: polkadot
           REACT_APP_WS_PROVIDER: ws://18.117.86.205:9944
 
       - name: Deploy
