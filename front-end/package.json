@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "license": "Apache-2.0",
   "private": true,
-  "homepage": "http://ryuh1.github.io/anonymity/",
+  "homepage": ".",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RyuH1/anonymity.git"
