@@ -58,7 +58,7 @@ import { GlobalStyle } from './ui-components/GlobalStyle'
 const App = () => {
   return (
     <>
-      <Router>
+      <Router basename={'/anonymity'}>
         <ThemeProvider theme={theme}>
           <NotificationProvider>
             <ModalProvider>
