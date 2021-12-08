@@ -206,6 +206,9 @@ const MenuBar = ({ className }: Props): JSX.Element => {
             </Menu.Item>
           ) : null}
           <Menu.Menu position="right">
+            <Menu.Item as={NavLink} to={'/delegation'}>
+              Manage Delegation
+            </Menu.Item>
             <NetworkDropdown />
             {/*{username ? (*/}
             {/*  <>*/}

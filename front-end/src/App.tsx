@@ -21,6 +21,7 @@ import { UserDetailsProvider } from './context/UserDetailsContext'
 import Bounties from './screens/Bounties'
 import PostBounty from './screens/BountyPost'
 import Council from './screens/Council'
+import Delegation from './screens/Delegation'
 // import CreatePost from './screens/CreatePost'
 // import PostDiscussion from './screens/DiscussionPost'
 // import Discussions from './screens/Discussions'
@@ -118,6 +119,9 @@ const App = () => {
                             {/*</Route>*/}
                             <Route path="/onchain">
                               <OnChain />
+                            </Route>
+                            <Route path={'/delegation'}>
+                              <Delegation />
                             </Route>
                             <Route path="/bounties">
                               <Bounties />
