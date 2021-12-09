@@ -207,3 +207,23 @@ fn undelegation_with_ongoing_mixed_vote_should_fail() {
 		assert_noop!(Democracy::undelegate(Origin::signed(2)), Error::<Test>::InappropriateTiming);
 	});
 }
+
+#[test]
+fn undelegation_after_mixed_vote_should_work() {
+	new_test_ext().execute_with(|| {
+		System::set_block_number(0);
+
+		assert_ok!(propose_set_balance_and_note(1, 2, 1));
+
+		fast_forward_to(2);
+
+		let r = 0;
+		assert_ok!(Democracy::delegate(Origin::signed(2), 1, Conviction::Locked6x, 20));
+		assert_ok!(Democracy::vote(Origin::signed(1), r, AccountVote::Mixed { aye: Conviction::Locked6x.votes::<u64>(20), nay: Delegations::default() }));
+		assert_noop!(Democracy::undelegate(Origin::signed(2)), Error::<Test>::InappropriateTiming);
+
+		fast_forward_to(4);
+
+		assert_ok!(Democracy::undelegate(Origin::signed(2)));
+	});
+}

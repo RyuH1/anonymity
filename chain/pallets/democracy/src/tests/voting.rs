@@ -57,6 +57,24 @@ fn split_vote_cancellation_should_work() {
 }
 
 #[test]
+fn mixed_vote_should_work() {
+	new_test_ext().execute_with(|| {
+		let r = begin_referendum();
+		let conv = Conviction::Locked6x;
+
+		assert_ok!(Democracy::delegate(Origin::signed(2), 1, conv.clone(), 20));
+		assert_ok!(Democracy::delegate(Origin::signed(3), 1, conv.clone(), 10));
+
+		let v = AccountVote::Mixed { aye: conv.votes(20), nay: conv.votes(20)};
+		assert_noop!(Democracy::vote(Origin::signed(5), r, v), Error::<Test>::InvalidMixedVoteValue);
+		let v = AccountVote::Mixed { aye: conv.votes(20), nay: conv.votes(10)};
+		assert_ok!(Democracy::vote(Origin::signed(1), r, v));
+
+		assert_eq!(tally(r), Tally { ayes: 120, nays: 60, turnout: 30});
+	})
+}
+
+#[test]
 fn single_proposal_should_work() {
 	new_test_ext().execute_with(|| {
 		System::set_block_number(0);
