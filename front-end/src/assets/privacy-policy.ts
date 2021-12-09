@@ -1,10 +1,11 @@
 // Copyright 2019-2020 @Premiurly/polkassembly authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
+/* eslint-disable max-len */
 
-import getNetwork from 'src/util/getNetwork';
+import getNetwork from 'src/util/getNetwork'
 
-const NETWORK = getNetwork();
+const NETWORK = getNetwork()
 
 export default `Polkassembly privacy notice
 ====================
@@ -104,4 +105,4 @@ Any personal information provided to or gathered by Premiurly is controlled by P
 
 We reserve the right to change this privacy notice from time to time to reflect changes in the law or regulation, our information practices, our services, or our operational requirements. Depending on the type of change, we may notify you by updating this page or by email. We encourage you to periodically review this page to see any changes we have made.
 
-Last updated: 27th August 2021 version 1`;
+Last updated: 27th August 2021 version 1`

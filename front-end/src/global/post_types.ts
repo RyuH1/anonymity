@@ -3,6 +3,6 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 export const post_type = {
-	'OFF_CHAIN': 1,
-	'ON_CHAIN': 2
-};
+  OFF_CHAIN: 1,
+  ON_CHAIN: 2
+}

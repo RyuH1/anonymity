@@ -2,36 +2,37 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 
-import TreasuryListing from '../../../components/Listings/TreasuryListing';
-import { useLatestDemocracyTreasuryProposalPostsQuery } from '../../../generated/graphql';
-import { post_topic } from '../../../global/post_topics';
-import { post_type } from '../../../global/post_types';
-import FilteredError from '../../../ui-components/FilteredError';
-import Loader from '../../../ui-components/Loader';
+import TreasuryListing from '../../../components/Listings/TreasuryListing'
+import { useLatestDemocracyTreasuryProposalPostsQuery } from '../../../generated/graphql'
+import { post_topic } from '../../../global/post_topics'
+import { post_type } from '../../../global/post_types'
+import FilteredError from '../../../ui-components/FilteredError'
+import Loader from '../../../ui-components/Loader'
 
 interface Props {
-	className?: string
+  className?: string
 }
 
-const TreasuryContainer = ({ className }:Props) => {
+const TreasuryContainer = ({ className }: Props) => {
+  const { data, error, refetch } = useLatestDemocracyTreasuryProposalPostsQuery({
+    variables: {
+      limit: 2,
+      postTopic: post_topic.TREASURY,
+      postType: post_type.ON_CHAIN
+    }
+  })
 
-	const { data, error, refetch } = useLatestDemocracyTreasuryProposalPostsQuery({ variables: {
-		limit: 2,
-		postTopic: post_topic.TREASURY,
-		postType: post_type.ON_CHAIN
-	} });
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
-	useEffect(() => {
-		refetch();
-	}, [refetch]);
+  if (error?.message) return <FilteredError text={error.message} />
 
-	if (error?.message) return <FilteredError text={error.message}/>;
+  if (data) return <TreasuryListing className={className} data={data} />
 
-	if (data) return <TreasuryListing className={className} data={data}/>;
+  return <Loader />
+}
 
-	return <Loader/>;
-};
-
-export default TreasuryContainer;
+export default TreasuryContainer

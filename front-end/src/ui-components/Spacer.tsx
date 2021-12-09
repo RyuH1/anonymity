@@ -2,17 +2,19 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import styled from '@xstyled/styled-components';
-import React from 'react';
+import styled from '@xstyled/styled-components'
+import React from 'react'
 
 interface Props {
-	className?: string
+  className?: string
 }
 
-const Spacer = ({ className }: Props) => {return <div className={className}></div>;};
+const Spacer = ({ className }: Props) => {
+  return <div className={className}></div>
+}
 
 export default styled(Spacer)`
-    font-size: 0;
-    height: 25px;
-    line-height: 0;
-`;
+  font-size: 0;
+  height: 25px;
+  line-height: 0;
+`
