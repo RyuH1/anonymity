@@ -208,13 +208,14 @@ const VoteRefrendum = ({
         sender
       }
       console.log(JSON.stringify(voteMessage))
-
       console.log(stringToHex(JSON.stringify(voteMessage)))
+
+      const rawVoteMessage = stringToHex(JSON.stringify(voteMessage))
 
       try {
         const { signature } = await signRaw({
           address: address,
-          data: stringToHex(JSON.stringify(voteMessage)),
+          data: rawVoteMessage,
           type: 'bytes'
         })
 
@@ -223,7 +224,7 @@ const VoteRefrendum = ({
           jsonrpc: '2.0',
           method: 'submit_vote',
           params: {
-            msg: { ...voteMessage },
+            msg: rawVoteMessage,
             signature
           }
         }
