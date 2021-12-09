@@ -209,6 +209,8 @@ const VoteRefrendum = ({
       }
       console.log(JSON.stringify(voteMessage))
 
+      console.log(stringToHex(JSON.stringify(voteMessage)))
+
       try {
         const { signature } = await signRaw({
           address: address,
