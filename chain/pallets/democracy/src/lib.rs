@@ -1389,7 +1389,7 @@ impl<T: Config> Pallet<T> {
 						);
 						// ensure for Mixed vote that the delegations from aye and nay equals to the total delegations
 						if let AccountVote::<BalanceOf<T>>::Mixed {aye, nay} = vote {
-							ensure!(aye.saturating_add(nay) == *delegations, Error::<T>::InvalidMixedVoteValue);
+							ensure!(aye.saturating_add(nay) <= *delegations, Error::<T>::InvalidMixedVoteValue);
 						}
 						votes.insert(i, (ref_index, vote));
 					},
