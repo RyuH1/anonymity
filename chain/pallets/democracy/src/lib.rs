@@ -1387,9 +1387,10 @@ impl<T: Config> Pallet<T> {
 							votes.len() as u32 <= T::MaxVotes::get(),
 							Error::<T>::MaxVotesReached
 						);
-						// ensure for Mixed vote that the delegations from aye and nay equals to the total delegations
+						// ensure for Mixed vote that the delegations from aye and nay not exceeding the total delegations
 						if let AccountVote::<BalanceOf<T>>::Mixed {aye, nay} = vote {
-							ensure!(aye.saturating_add(nay) <= *delegations, Error::<T>::InvalidMixedVoteValue);
+							let voted_delegations = aye.saturating_add(nay);
+							ensure!(voted_delegations.votes <= (*delegations).votes && voted_delegations.capital <= (*delegations).capital, Error::<T>::InvalidMixedVoteValue);
 						}
 						votes.insert(i, (ref_index, vote));
 					},
