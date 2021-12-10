@@ -62,15 +62,15 @@ const MenuBar = ({ className }: Props): JSX.Element => {
 
   const onchainItems = [
     { content: 'Overview', to: '/onchain' },
-    { content: 'Referenda', to: '/referenda' },
-    { content: 'Proposals', to: '/proposals' },
-    { content: 'Motions', to: '/motions' },
-    { content: 'Treasury proposals', to: '/treasury-proposals' },
-    { content: 'Tech comm proposals', to: '/tech-comm-proposals' },
-    { content: 'Tips', to: '/tips' },
-    { content: 'Bounties', to: '/bounties' },
-    { content: 'Council', to: '/council' },
-    { content: 'Search', to: '/search' }
+    { content: 'Referenda', to: '/referenda' }
+    // { content: 'Proposals', to: '/proposals' },
+    // { content: 'Motions', to: '/motions' },
+    // { content: 'Treasury proposals', to: '/treasury-proposals' },
+    // { content: 'Tech comm proposals', to: '/tech-comm-proposals' },
+    // { content: 'Tips', to: '/tips' },
+    // { content: 'Bounties', to: '/bounties' },
+    // { content: 'Council', to: '/council' },
+    // { content: 'Search', to: '/search' }
   ]
 
   const loggedOutItems = [
@@ -206,6 +206,9 @@ const MenuBar = ({ className }: Props): JSX.Element => {
             </Menu.Item>
           ) : null}
           <Menu.Menu position="right">
+            <Menu.Item as={NavLink} to={'/delegation'}>
+              Manage Delegation
+            </Menu.Item>
             <NetworkDropdown />
             {/*{username ? (*/}
             {/*  <>*/}
