@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "license": "Apache-2.0",
   "private": true,
-  "homepage": "https://ryuh1.github.io/anonymity/",
+  "homepage": "https://automata-network.github.io/polkadot-hackathon/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RyuH1/anonymity.git"
+    "url": "git+https://github.com/automata-network/polkadot-hackathon.git"
   },
   "bugs": {
-    "url": "https://github.com/RyuH1/anonymity/issues"
+    "url": "https://github.com/automata-network/polkadot-hackathon/issues"
   },
   "author": "Premiurly <contact@premiurly.in>",
   "maintainers": [
@@ -75,9 +75,9 @@
   },
   "browserslist": {
     "production": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ],
     "development": [
       "last 1 chrome version",

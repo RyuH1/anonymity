@@ -59,7 +59,7 @@ import { GlobalStyle } from './ui-components/GlobalStyle'
 const App = () => {
   return (
     <>
-      <Router basename={'/anonymity'}>
+      <Router basename={'/polkadot-hackathon'}>
         <ThemeProvider theme={theme}>
           <NotificationProvider>
             <ModalProvider>
