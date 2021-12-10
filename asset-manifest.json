@@ -5,11 +5,11 @@
     "main.js.map": "/anonymity/static/js/main.f4131672.chunk.js.map",
     "runtime-main.js": "/anonymity/static/js/runtime-main.f8a34d52.js",
     "runtime-main.js.map": "/anonymity/static/js/runtime-main.f8a34d52.js.map",
-    "static/css/2.6b5eb10c.chunk.css": "/anonymity/static/css/2.6b5eb10c.chunk.css",
+    "static/css/2.debc5d9d.chunk.css": "/anonymity/static/css/2.debc5d9d.chunk.css",
     "static/js/2.657813f9.chunk.js": "/anonymity/static/js/2.657813f9.chunk.js",
     "static/js/2.657813f9.chunk.js.map": "/anonymity/static/js/2.657813f9.chunk.js.map",
     "index.html": "/anonymity/index.html",
-    "static/css/2.6b5eb10c.chunk.css.map": "/anonymity/static/css/2.6b5eb10c.chunk.css.map",
+    "static/css/2.debc5d9d.chunk.css.map": "/anonymity/static/css/2.debc5d9d.chunk.css.map",
     "static/css/main.fb25ffb6.chunk.css.map": "/anonymity/static/css/main.fb25ffb6.chunk.css.map",
     "static/js/2.657813f9.chunk.js.LICENSE.txt": "/anonymity/static/js/2.657813f9.chunk.js.LICENSE.txt",
     "static/media/semantic.min.css": "/anonymity/static/media/outline-icons.ddae9b1b.woff",
@@ -18,7 +18,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.f8a34d52.js",
-    "static/css/2.6b5eb10c.chunk.css",
+    "static/css/2.debc5d9d.chunk.css",
     "static/js/2.657813f9.chunk.js",
     "static/css/main.fb25ffb6.chunk.css",
     "static/js/main.f4131672.chunk.js"
