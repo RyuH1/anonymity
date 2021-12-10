@@ -1461,51 +1461,67 @@ impl<T: Config> Pallet<T> {
 	}
 
 	/// Return the number of votes for `who`
-	fn increase_upstream_delegation(who: &T::AccountId, amount: Delegations<BalanceOf<T>>) -> u32 {
-		VotingOf::<T>::mutate(who, |voting| match voting {
-			Voting::Delegating { delegations, .. } => {
-				// We don't support second level delegating, so we don't need to do anything more.
-				*delegations = delegations.saturating_add(amount);
-				1
-			},
-			Voting::Direct { votes, delegations, .. } => {
-				*delegations = delegations.saturating_add(amount);
-				for &(ref_index, account_vote) in votes.iter() {
-					if let AccountVote::Standard { vote, .. } = account_vote {
-						ReferendumInfoOf::<T>::mutate(ref_index, |maybe_info| {
-							if let Some(ReferendumInfo::Ongoing(ref mut status)) = maybe_info {
-								status.tally.increase(vote.aye, amount);
+	fn increase_upstream_delegation(who: &T::AccountId, amount: Delegations<BalanceOf<T>>) -> Result<u32, DispatchError> {
+		let result = VotingOf::<T>::try_mutate(who, |voting| -> Result<u32, DispatchError> {
+			match voting {
+				Voting::Delegating { delegations, .. } => {
+					// We don't support second level delegating, so we don't need to do anything more.
+					*delegations = delegations.saturating_add(amount);
+					Ok(1)
+				},
+				Voting::Direct { votes, delegations, .. } => {
+					*delegations = delegations.saturating_add(amount);
+					for &(ref_index, account_vote) in votes.iter() {
+						if let AccountVote::Standard { vote, .. } = account_vote {
+							ReferendumInfoOf::<T>::mutate(ref_index, |maybe_info| {
+								if let Some(ReferendumInfo::Ongoing(ref mut status)) = maybe_info {
+									status.tally.increase(vote.aye, amount);
+								}
+							});
+						} else if let AccountVote::Mixed { .. } = account_vote {
+							// ensure the target doesn't have an Ongoing Direct Mixed Vote
+							if let Some(ReferendumInfo::Ongoing(..)) = ReferendumInfoOf::<T>::get(ref_index) {
+								return Err(Error::<T>::InappropriateTiming.into());
 							}
-						});
+						}
 					}
-				}
-				votes.len() as u32
-			},
-		})
+					Ok(votes.len() as u32)
+				},
+			}
+		});
+		result
 	}
 
 	/// Return the number of votes for `who`
-	fn reduce_upstream_delegation(who: &T::AccountId, amount: Delegations<BalanceOf<T>>) -> u32 {
-		VotingOf::<T>::mutate(who, |voting| match voting {
-			Voting::Delegating { delegations, .. } => {
-				// We don't support second level delegating, so we don't need to do anything more.
-				*delegations = delegations.saturating_sub(amount);
-				1
-			},
-			Voting::Direct { votes, delegations, .. } => {
-				*delegations = delegations.saturating_sub(amount);
-				for &(ref_index, account_vote) in votes.iter() {
-					if let AccountVote::Standard { vote, .. } = account_vote {
-						ReferendumInfoOf::<T>::mutate(ref_index, |maybe_info| {
-							if let Some(ReferendumInfo::Ongoing(ref mut status)) = maybe_info {
-								status.tally.reduce(vote.aye, amount);
+	fn reduce_upstream_delegation(who: &T::AccountId, amount: Delegations<BalanceOf<T>>) -> Result<u32, DispatchError> {
+		let result = VotingOf::<T>::try_mutate(who, |voting| -> Result<u32, DispatchError> {
+			match voting {
+				Voting::Delegating { delegations, .. } => {
+					// We don't support second level delegating, so we don't need to do anything more.
+					*delegations = delegations.saturating_sub(amount);
+					Ok(1)
+				},
+				Voting::Direct { votes, delegations, .. } => {
+					*delegations = delegations.saturating_sub(amount);
+					for &(ref_index, account_vote) in votes.iter() {
+						if let AccountVote::Standard { vote, .. } = account_vote {
+							ReferendumInfoOf::<T>::mutate(ref_index, |maybe_info| {
+								if let Some(ReferendumInfo::Ongoing(ref mut status)) = maybe_info {
+									status.tally.reduce(vote.aye, amount);
+								}
+							});
+						} else if let AccountVote::Mixed { .. } = account_vote {
+							// ensure the target doesn't have an Ongoing Direct Mixed Vote
+							if let Some(ReferendumInfo::Ongoing(..)) = ReferendumInfoOf::<T>::get(ref_index) {
+								return Err(Error::<T>::InappropriateTiming.into());
 							}
-						});
+						}
 					}
-				}
-				votes.len() as u32
-			},
-		})
+					Ok(votes.len() as u32)
+				},
+			}
+		});
+		result
 	}
 
 	/// Attempt to delegate `balance` times `conviction` of voting power from `who` to `target`.
@@ -1520,17 +1536,6 @@ impl<T: Config> Pallet<T> {
 		ensure!(who != target, Error::<T>::Nonsense);
 		ensure!(balance <= T::Currency::free_balance(&who), Error::<T>::InsufficientFunds);
 
-		// ensure the target doesn't have an Ongoing Direct Mixed Vote
-		if let Voting::Direct { votes, .. } = VotingOf::<T>::get(&target) {
-			for &(ref_index, account_vote) in votes.iter() {
-				if let AccountVote::Mixed { .. } = account_vote {
-					if let Some(ReferendumInfo::Ongoing(..)) = ReferendumInfoOf::<T>::get(ref_index) {
-						return Err(Error::<T>::InappropriateTiming.into());
-					}
-				}
-			}
-		}
-
 		let votes = VotingOf::<T>::try_mutate(&who, |voting| -> Result<u32, DispatchError> {
 			let mut old = Voting::Delegating {
 				balance,
@@ -1543,7 +1548,7 @@ impl<T: Config> Pallet<T> {
 			match old {
 				Voting::Delegating { balance, target, conviction, delegations, prior, .. } => {
 					// remove any delegation votes to our current target.
-					Self::reduce_upstream_delegation(&target, conviction.votes(balance));
+					Self::reduce_upstream_delegation(&target, conviction.votes(balance))?;
 					voting.set_common(delegations, prior);
 				},
 				Voting::Direct { votes, delegations, prior } => {
@@ -1552,7 +1557,7 @@ impl<T: Config> Pallet<T> {
 					voting.set_common(delegations, prior);
 				},
 			}
-			let votes = Self::increase_upstream_delegation(&target, conviction.votes(balance));
+			let votes = Self::increase_upstream_delegation(&target, conviction.votes(balance))?;
 			// Extend the lock to `balance` (rather than setting it) since we don't know what other
 			// votes are in place.
 			T::Currency::extend_lock(DEMOCRACY_ID, &who, balance, WithdrawReasons::TRANSFER);
@@ -1571,19 +1576,9 @@ impl<T: Config> Pallet<T> {
 			sp_std::mem::swap(&mut old, voting);
 			match old {
 				Voting::Delegating { balance, target, conviction, delegations, mut prior } => {
-					// ensure the target doesn't have an Ongoing Direct Mixed Vote
-					if let Voting::Direct { votes, .. } = VotingOf::<T>::get(&target) {
-						for &(ref_index, account_vote) in votes.iter() {
-							if let AccountVote::Mixed { .. } = account_vote {
-								if let Some(ReferendumInfo::Ongoing(..)) = ReferendumInfoOf::<T>::get(ref_index) {
-									return Err(Error::<T>::InappropriateTiming.into());
-								}
-							}
-						}
-					}
 					// remove any delegation votes to our current target.
 					let votes =
-						Self::reduce_upstream_delegation(&target, conviction.votes(balance));
+						Self::reduce_upstream_delegation(&target, conviction.votes(balance))?;
 					let now = frame_system::Pallet::<T>::block_number();
 					let lock_periods = conviction.lock_periods().into();
 					prior.accumulate(now + T::VoteLockingPeriod::get() * lock_periods, balance);

@@ -223,8 +223,8 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 		(57_783_000 as Weight)
 			// Standard Error: 4_000
 			.saturating_add((7_623_000 as Weight).saturating_mul(r as Weight))
-			.saturating_add(T::DbWeight::get().reads(5 as Weight))
-			.saturating_add(T::DbWeight::get().reads((2 as Weight).saturating_mul(r as Weight)))
+			.saturating_add(T::DbWeight::get().reads(4 as Weight))
+			.saturating_add(T::DbWeight::get().reads((1 as Weight).saturating_mul(r as Weight)))
 			.saturating_add(T::DbWeight::get().writes(4 as Weight))
 			.saturating_add(T::DbWeight::get().writes((1 as Weight).saturating_mul(r as Weight)))
 	}
@@ -234,8 +234,8 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 		(26_027_000 as Weight)
 			// Standard Error: 4_000
 			.saturating_add((7_593_000 as Weight).saturating_mul(r as Weight))
-			.saturating_add(T::DbWeight::get().reads(3 as Weight))
-			.saturating_add(T::DbWeight::get().reads((2 as Weight).saturating_mul(r as Weight)))
+			.saturating_add(T::DbWeight::get().reads(2 as Weight))
+			.saturating_add(T::DbWeight::get().reads((1 as Weight).saturating_mul(r as Weight)))
 			.saturating_add(T::DbWeight::get().writes(2 as Weight))
 			.saturating_add(T::DbWeight::get().writes((1 as Weight).saturating_mul(r as Weight)))
 	}
