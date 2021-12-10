@@ -6,11 +6,8 @@ import { Delegatee } from '../types'
 
 export const DELEGATEES: Delegatee[] = [
   {
-    name: 'Geode Endpoint (EVE)',
-    url: '5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw'
-  },
-  {
-    name: 'Geode Endpoint (FERDIE)',
-    url: '5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL'
+    address: '5FswncCyh3U5KauCfP69dMGrDFG1uMs65U1yJ9TE71CX63De',
+    name: 'Geode',
+    url: 'https://hackathon-geode.ata.network'
   }
 ]

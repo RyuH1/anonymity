@@ -34,12 +34,12 @@ const DelegateeDropdown = ({
 
   delegatees.forEach((delegatee) => {
     delegateeOptions.push({
-      children: <Address extensionName={delegatee.name} address={delegatee.url} />,
-      value: delegatee.url
+      children: <Address extensionName={delegatee.name} address={delegatee.address} />,
+      value: delegatee.address
     })
 
-    if (delegatee.url && delegatee.name) {
-      dropdownList[delegatee.url] = delegatee.name
+    if (delegatee.address && delegatee.name) {
+      dropdownList[delegatee.address] = delegatee.name
     }
   })
 
@@ -47,10 +47,11 @@ const DelegateeDropdown = ({
     event: React.SyntheticEvent<HTMLElement, Event>,
     data: DropdownProps
   ) => {
+    const { value } = data
     const delegateeValues = Object.values(delegatees)
     let selectedDelegateeIndex = 0
     for (const key of Object.keys(delegateeValues)) {
-      if (delegateeValues[Number(key)].url === data.value) {
+      if (delegateeValues[Number(key)].address === value) {
         selectedDelegateeIndex = Number(key)
         break
       }
@@ -68,12 +69,12 @@ const DelegateeDropdown = ({
       trigger={
         <div className="address-wrapper">
           <Address
-            extensionName={dropdownList[selectedDelegatee.url]}
-            address={selectedDelegatee.url}
+            extensionName={dropdownList[selectedDelegatee.address]}
+            address={selectedDelegatee.address}
           />
         </div>
       }
-      value={selectedDelegatee.url}
+      value={selectedDelegatee.address}
     />
   )
 }

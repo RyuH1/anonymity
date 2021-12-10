@@ -265,10 +265,11 @@ const Address = ({ className }: Props): JSX.Element => {
     event: React.SyntheticEvent<HTMLElement, Event>,
     data: DropdownProps
   ) => {
+    const { value } = data
     const delegateeValues = Object.values(DELEGATEES)
     let selectedDelegateeIndex = 0
     for (const key of Object.keys(delegateeValues)) {
-      if (delegateeValues[Number(key)].url === data.value) {
+      if (delegateeValues[Number(key)].address === value) {
         selectedDelegateeIndex = Number(key)
         break
       }
@@ -287,7 +288,11 @@ const Address = ({ className }: Props): JSX.Element => {
     const injector = await web3FromAddress(address)
     const { signer } = injector
 
-    const delegateTx = api.tx.democracy.delegate(selectedDelegatee.url, conviction, lockedBalance)
+    const delegateTx = api.tx.democracy.delegate(
+      selectedDelegatee.address,
+      conviction,
+      lockedBalance
+    )
 
     delegateTx
       .signAndSend(address, { signer }, ({ status }) => {

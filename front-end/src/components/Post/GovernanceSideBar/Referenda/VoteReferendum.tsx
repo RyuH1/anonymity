@@ -21,20 +21,10 @@ import { Form } from 'src/ui-components/Form'
 import HelperTooltip from 'src/ui-components/HelperTooltip'
 import Loader from 'src/ui-components/Loader'
 
+import { DELEGATEES } from '../../../../global/delegatees'
 import AccountSelectionForm from '../../../../ui-components/AccountSelectionForm'
 import AyeNayButtons from '../../../../ui-components/AyeNayButtons'
 import DelegateeSelectionForm from '../../../../ui-components/DelegateeSelectionForm'
-
-const DELEGATEES: Delegatee[] = [
-  {
-    name: 'Geode Endpoint (EVE)',
-    url: '5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw'
-  },
-  {
-    name: 'Geode Endpoint (FERDIE)',
-    url: '5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL'
-  }
-]
 
 interface Props {
   className?: string
@@ -143,7 +133,11 @@ const VoteRefrendum = ({
 
     setLoadingStatus({ isLoading: true, message: 'Waiting for signature' })
 
-    const delegateTx = api.tx.democracy.delegate(selectedDelegatee.url, conviction, lockedBalance)
+    const delegateTx = api.tx.democracy.delegate(
+      selectedDelegatee.address,
+      conviction,
+      lockedBalance
+    )
 
     delegateTx
       .signAndSend(address, ({ status }) => {
@@ -239,10 +233,10 @@ const VoteRefrendum = ({
           method: 'POST'
         }
 
-        const response = await fetch(process.env.REACT_APP_GEODE_ENDPOINT!, requestOptions)
+        const response = await fetch(selectedDelegatee.url, requestOptions)
         console.log('Geode Response', await response.json())
       } catch (e) {
-        console.error(e)
+        console.error('Geode Error', e)
       } finally {
         setLoadingStatus({ isLoading: false, message: '' })
       }
@@ -253,10 +247,12 @@ const VoteRefrendum = ({
     event: React.SyntheticEvent<HTMLElement, Event>,
     data: DropdownProps
   ) => {
+    const { value } = data
+
     const delegateeValues = Object.values(DELEGATEES)
     let selectedDelegateeIndex = 0
     for (const key of Object.keys(delegateeValues)) {
-      if (delegateeValues[Number(key)].url === data.value) {
+      if (delegateeValues[Number(key)].address === value) {
         selectedDelegateeIndex = Number(key)
         break
       }

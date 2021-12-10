@@ -157,6 +157,7 @@ export interface ReactionMapFields {
 }
 
 export interface Delegatee {
+  address: string
   name: string
   url: string
 }
