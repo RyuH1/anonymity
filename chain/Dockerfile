@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:experimental
 FROM rust:1.57 as builder
-LABEL maintainer "Anormity Team"
+LABEL maintainer "Automata Team"
 
 ARG PROFILE=release
 ARG TOOLCHAIN=nightly-2021-12-06
@@ -35,7 +35,7 @@ RUN --mount=type=cache,target=/root/.cache/sccache \
     cp /var/www/node-template/target/${PROFILE}/node-template /usr/local/bin/node-template
 
 FROM debian:bullseye-slim as app
-LABEL maintainer "Anormity Team"
+LABEL maintainer "Automata Team"
 
 COPY --from=builder /usr/local/bin/node-template /usr/local/bin/node-template
 
