@@ -6,8 +6,6 @@ The Geode work is mainly done by 3 threads:
 - Events thread: listents for Started, Delegated and Undelegated events emitted by the Democracy pallet
 - Block Monitor thread: receives subscription updates for `chain_subscribeNewHeads` and keeps track of "time"
 
-
-
 ##### RPC Server Thread
 
 The `submit_vote` RPC method takes in as parameter a signed object containing the identity of the voter, together with their vote option and referendum index for which they vote. The Geode will verify that the object is properly formed, and if it is, it will do additional checks to decide if the vote should be accepted:
@@ -28,3 +26,23 @@ The Events Thread will take the following actions when an event is received:
 ##### Block Monitor Thread
 
 The Block Monitor Thread receives an update whenever a new head is available. For each head, it takes out the block number and checks if it is equal to any of its deadlines for submitting votes. If a deadline has been reached for a referendum, the voting process is triggered for it. During the voting process, the Geode goes through the list of account that delegated the Geode and computes the vote power for each account, based on balance and conviction. It then checks if the account voted in the referendum: if there is a vote, then it will add it to aye or nay accordingly; otherwise, it will add half of the vote power to aye, and half to nay.
+
+```mermaid
+sequenceDiagram
+    participant user as User
+    participant chain as Chain
+    participant rpc as RPC Server
+    participant events as Events Thread
+    participant block as Block Monitor Thread
+
+    user->>+chain: Delegate Geode
+    chain->>-user: Ok
+    chain-->>events: Delegated
+    user->>+rpc: Submit Vote
+    rpc->>-user: Success
+    chain-->>block: New Header
+    Note over block: It's time to vote!
+    block->>+chain: Vote Mixed
+    chain->>-block: Ok
+```
+
