@@ -3,12 +3,12 @@
 This project implements the means necessary to allow a user to anonymously vote in Democracy Referenda. With our solution, a user delegates the Geode, a TEE empowered by Intel SGX, to vote on their behalf. The user then privately submits their vote to the Geode, and the Geode votes in the referendum according to the votes received from the users who delegated it.
 ## Submissions
 ### Democracy Pallets with Demo chain
-The vote submitted by Geode is a Mixed vote, a vote type we introduce in the chain to allow the Geode to have votes for both sides of the proposal. We added the necessary logic to handle this type of vote in ./chain. And it has been integrated into a demo chain built from Substrate Node Template
+The vote submitted by Geode is a Mixed vote, a vote type we introduce in the chain to allow the Geode to have votes for both sides of the proposal. We added the necessary logic to handle this type of vote in `./chain`. And it has been integrated into a demo chain built from Substrate Node Template
 
 Here is a [diff](<https://github.com/paritytech/substrate/compare/monthly-2021-11-1...automata-network:polkadot-hackathon>) of the modified Democracy Pallet from the original one for a quick glimpse. 
 
 ### Frontend Application
-The code for the front-end providing the interface for voting through the Geode is in ./front-end. It's built on top of the current project [Polkadot Assembly](https://github.com/Premiurly/polkassembly)
+The code for the front-end providing the interface for voting through the Geode is in `./front-end`. It's built on top of the [Polkadot Assembly](https://github.com/Premiurly/polkassembly)
 
 ### Geode Design Document
 The Geode code runs entirely in an Intel SGX enclave, ensuring that the voting preferences of users are not leaked. Users call the “submit_vote” RPC method and inform Geode of their voting option for a particular referendum (a vote will be accepted only if the sender delegated Geode in advance). For each referendum, Geode sets a deadline a couple of blocks before the referendum ends (for now, the deadline is set to 10 blocks before the referendum ends.) When the deadline is met, Geode stops accepting voting options and starts counting the votes for that particular referendum. If a user delegates the Geode but doesn’t vote, the Geode counts the vote as half approve and half disapprove. Once counting is done, Geode builds a Mixed vote and submits it to the chain. More information regarding the internal doing of Geode can be found in [Geode Design Document](./GEODE_DESIGN.md).
