@@ -37,7 +37,7 @@ jobs:
           yarn build
         env:
           REACT_APP_NETWORK: polkadot
-          REACT_APP_WS_PROVIDER: ws://18.117.86.205:9944
+          REACT_APP_WS_PROVIDER: wss://hackathon-api.ata.network
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.4
