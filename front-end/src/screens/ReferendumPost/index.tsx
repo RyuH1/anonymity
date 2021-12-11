@@ -27,11 +27,6 @@ const ReferendumPost = () => {
   console.debug(data)
 
   useEffect(() => {
-    if (idNumber === 0) {
-      setError({ message: "Sorry, we couldn't find any referendum with this id" })
-      return
-    }
-
     if (!api || !apiReady) return
 
     api.derive.democracy
