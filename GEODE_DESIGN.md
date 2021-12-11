@@ -27,22 +27,4 @@ The Events Thread will take the following actions when an event is received:
 
 The Block Monitor Thread receives an update whenever a new head is available. For each head, it takes out the block number and checks if it is equal to any of its deadlines for submitting votes. If a deadline has been reached for a referendum, the voting process is triggered for it. During the voting process, the Geode goes through the list of account that delegated the Geode and computes the vote power for each account, based on balance and conviction. It then checks if the account voted in the referendum: if there is a vote, then it will add it to aye or nay accordingly; otherwise, it will add half of the vote power to aye, and half to nay.
 
-```mermaid
-sequenceDiagram
-    participant user as User
-    participant chain as Chain
-    participant rpc as RPC Server
-    participant events as Events Thread
-    participant block as Block Monitor Thread
-
-    user->>+chain: Delegate Geode
-    chain->>-user: Ok
-    chain-->>events: Delegated
-    user->>+rpc: Submit Vote
-    rpc->>-user: Success
-    chain-->>block: New Header
-    Note over block: It's time to vote!
-    block->>+chain: Vote Mixed
-    chain->>-block: Ok
-```
-
+![geode_diagram](geode_diagram.png)
