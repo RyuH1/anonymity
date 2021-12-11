@@ -19,7 +19,6 @@ import {
 import NetworkDropdown from 'src/ui-components/NetworkDropdown'
 import getNetwork from 'src/util/getNetwork'
 
-import logo from '../../assets/polkassembly-logo.png'
 import { UserDetailsContext } from '../../context/UserDetailsContext'
 import { useLogoutMutation } from '../../generated/graphql'
 import { useFinalizedBlock, useRouter } from '../../hooks'
@@ -44,8 +43,6 @@ const MenuBar = ({ className }: Props): JSX.Element => {
 
   // const latestBlockNumber = data?.blockNumbers[0]?.number
   const latestBlockNumber = useFinalizedBlock()
-
-  const blockUrl = `https://${NETWORK}.subscan.io/block/${latestBlockNumber?.toString()}`
 
   const handleLogout = async () => {
     try {
@@ -123,7 +120,7 @@ const MenuBar = ({ className }: Props): JSX.Element => {
       <Responsive maxWidth={Responsive.onlyTablet.maxWidth}>
         <Menu className={`${className} ${NETWORK}`} inverted widths={2} id="menubar">
           <Menu.Item as={NavLink} to="/" className="logo" id="title" onClick={handleClose}>
-            <img alt="Polkassembly Logo" src={logo} />
+            {/* <img alt="Polkassembly Logo" src={logo} /> */}
           </Menu.Item>
           <Menu.Menu position="right">
             <NetworkDropdown />
@@ -170,7 +167,7 @@ const MenuBar = ({ className }: Props): JSX.Element => {
               {latestBlockNumber ? (
                 <Menu.Item>
                   <Icon name="cube" />
-                  <a href={blockUrl} target="_blank" rel="noreferrer">{` ${latestBlockNumber}`}</a>
+                  {` ${latestBlockNumber}`}
                 </Menu.Item>
               ) : null}
             </Accordion>
@@ -181,7 +178,7 @@ const MenuBar = ({ className }: Props): JSX.Element => {
       <Responsive minWidth={Responsive.onlyComputer.minWidth}>
         <Menu className={`${className} ${NETWORK}`} stackable inverted borderless>
           <Menu.Item as={NavLink} to="/" className="logo" id="title">
-            <img alt="Polkassembly Logo" src={logo} />
+            {/* <img alt="Polkassembly Logo" src={logo} /> */}
           </Menu.Item>
           {/*{contentItems.map((item, index) => (*/}
           {/*  <Menu.Item as={NavLink} className="desktop_items" key={index} {...item} />*/}
@@ -198,18 +195,14 @@ const MenuBar = ({ className }: Props): JSX.Element => {
           {latestBlockNumber ? (
             <Menu.Item>
               <Icon name="cube" style={{ marginRight: '10px' }} />
-              <a
-                href={blockUrl}
-                target="_blank"
-                rel="noreferrer"
-              >{` ${latestBlockNumber?.toNumber()}`}</a>
+              {` ${latestBlockNumber?.toNumber()}`}
             </Menu.Item>
           ) : null}
           <Menu.Menu position="right">
             <Menu.Item as={NavLink} to={'/delegation'}>
               Manage Delegation
             </Menu.Item>
-            <NetworkDropdown />
+            {/* <NetworkDropdown /> */}
             {/*{username ? (*/}
             {/*  <>*/}
             {/*    <Dropdown trigger={userMenu} icon={caretIcon} item={true}>*/}
