@@ -216,8 +216,8 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 			.saturating_add(T::DbWeight::get().reads(5 as Weight))
 			.saturating_add(T::DbWeight::get().reads((1 as Weight).saturating_mul(r as Weight)))
 	}
-	// Storage: Democracy VotingOf (r:4 w:3)
-	// Storage: Democracy ReferendumInfoOf (r:2 w:1)
+	// Storage: Democracy VotingOf (r:3 w:3)
+	// Storage: Democracy ReferendumInfoOf (r:1 w:1)
 	// Storage: Balances Locks (r:1 w:1)
 	fn delegate(r: u32, ) -> Weight {
 		(57_783_000 as Weight)
@@ -228,8 +228,8 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 			.saturating_add(T::DbWeight::get().writes(4 as Weight))
 			.saturating_add(T::DbWeight::get().writes((1 as Weight).saturating_mul(r as Weight)))
 	}
-	// Storage: Democracy VotingOf (r:3 w:2)
-	// Storage: Democracy ReferendumInfoOf (r:2 w:1)
+	// Storage: Democracy VotingOf (r:2 w:2)
+	// Storage: Democracy ReferendumInfoOf (r:1 w:1)
 	fn undelegate(r: u32, ) -> Weight {
 		(26_027_000 as Weight)
 			// Standard Error: 4_000
