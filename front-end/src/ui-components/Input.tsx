@@ -16,20 +16,20 @@ function Input({ className, invalid = false, ...props }: Props) {
 
 export default styled(Input)`
   .ui.input > input {
-    font-family: font_default;
-    font-size: input_text_size;
+    font-family: ${({ theme }) => theme.fonts.font_default};
+    font-size: ${({ theme }) => theme.fontSizes.input_text_size};
     border-width: 1px;
     border-color: ${({ theme }) => theme.colors.grey_light};
-    border-radius: input_border_radius;
-    text-indent: 0rem;
+    border-radius: ${({ theme }) => theme.colors.input_border_radius};
+    text-indent: 0;
     padding: 1rem;
     margin-bottom: 1.2rem;
     &:focus {
-      font-family: font_default;
-      font-size: input_text_size;
+      font-family: ${({ theme }) => theme.fonts.font_default};
+      font-size: ${({ theme }) => theme.fontSizes.input_text_size};
       color: ${({ theme }) => theme.colors.black_text};
       border-color: ${({ theme }) => theme.colors.grey_primary};
-      border-radius: input_border_radius;
+      border-radius: ${({ theme }) => theme.radii.input_border_radius};
     }
     &:hover {
       border-color: ${({ theme }) => theme.colors.grey_secondary};
@@ -37,7 +37,7 @@ export default styled(Input)`
   }
 
   &.invalid > .ui.input > input {
-    color: red_primary !important;
-    border-color: red_primary !important;
+    color: ${({ theme }) => `${theme.colors.red_primary} !important`};
+    border-color: ${({ theme }) => `${theme.colors.red_primary} !important`};
   }
 `

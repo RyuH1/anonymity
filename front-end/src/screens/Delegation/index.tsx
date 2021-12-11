@@ -2,17 +2,72 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import styled from '@xstyled/styled-components'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useState } from 'react'
 import { Divider, Grid } from 'semantic-ui-react'
 
-import Address from './address'
+import ExtensionNotDetected from '../../components/ExtensionNotDetected'
+import { APPNAME } from '../../global/appName'
+import { Form } from '../../ui-components/Form'
+import Addresses from './addresses'
+import Manage from './manage'
 
 interface Props {
   className?: string
 }
 
 const Delegation = ({ className }: Props) => {
+  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>([])
+  const [accountToBeManaged, setAccountToBeManaged] = useState<InjectedAccountWithMeta | null>(null)
+  const [isManage, setIsManage] = useState<boolean>(false)
+  const [extensionNotAvailable, setExtensionNotAvailable] = useState(false)
+
+  // Get all accounts if extension was installed
+  useEffect(() => {
+    ;(async () => {
+      const extensions = await web3Enable(APPNAME)
+
+      if (extensions.length === 0) {
+        setExtensionNotAvailable(true)
+        return
+      } else {
+        setExtensionNotAvailable(false)
+      }
+
+      const allAccounts = await web3Accounts()
+
+      setAccounts(allAccounts)
+    })()
+  }, [])
+
+  const onManageAddress = (account: InjectedAccountWithMeta) => {
+    setAccountToBeManaged(account)
+    setIsManage(true)
+  }
+
+  const onCancelManage = () => {
+    setIsManage(false)
+  }
+
+  const onDelegationSaved = () => {
+    setIsManage(false)
+  }
+
+  if (extensionNotAvailable) {
+    return (
+      <Form className={className} standalone={false}>
+        <Form.Group>
+          <Form.Field width={16}>
+            <ExtensionNotDetected />
+          </Form.Field>
+        </Form.Group>
+      </Form>
+    )
+  }
+
   return (
     <Grid>
       <Grid.Column
@@ -25,7 +80,15 @@ const Delegation = ({ className }: Props) => {
       >
         <h2>Manage Delegation</h2>
         <Divider />
-        <Address />
+        {!isManage ? (
+          <Addresses accounts={accounts} onManageAddress={onManageAddress} />
+        ) : (
+          <Manage
+            account={accountToBeManaged}
+            onCancelManage={onCancelManage}
+            onDelegationSaved={onDelegationSaved}
+          />
+        )}
       </Grid.Column>
       <Grid.Column only="computer" computer={4} largeScreen={6} widescreen={6} />
     </Grid>

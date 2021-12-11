@@ -5,15 +5,17 @@
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import { Keyring } from '@polkadot/keyring'
+import { Conviction, VotingDelegating, VotingDirect } from '@polkadot/types/interfaces'
 import { stringToHex, u8aToHex } from '@polkadot/util'
 import styled from '@xstyled/styled-components'
 import BN from 'bn.js'
-import React, { useContext, useMemo, useState } from 'react'
+import isEmpty from 'lodash/isEmpty'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Checkbox, DropdownProps, Select } from 'semantic-ui-react'
 import Icon from 'semantic-ui-react/dist/commonjs/elements/Icon'
 import { ApiContext } from 'src/context/ApiContext'
 import { NotificationContext } from 'src/context/NotificationContext'
-import { Delegatee, LoadingStatusType, NotificationStatus } from 'src/types'
+import { Delegatee, GeodeResponse, LoadingStatusType, NotificationStatus } from 'src/types'
 import BalanceInput from 'src/ui-components/BalanceInput'
 import Button from 'src/ui-components/Button'
 import Card from 'src/ui-components/Card'
@@ -26,6 +28,16 @@ import AccountSelectionForm from '../../../../ui-components/AccountSelectionForm
 import AyeNayButtons from '../../../../ui-components/AyeNayButtons'
 import DelegateeSelectionForm from '../../../../ui-components/DelegateeSelectionForm'
 
+interface AccountDelegationMap {
+  [accountId: string]: DelegationStatus
+}
+
+interface DelegationStatus {
+  isDelegating: boolean
+  delegating?: VotingDelegating
+  direct?: VotingDirect
+}
+
 interface Props {
   className?: string
   referendumId?: number | null | undefined
@@ -33,6 +45,15 @@ interface Props {
   accounts: InjectedAccountWithMeta[]
   onAccountChange: (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void
   getAccounts: () => Promise<undefined>
+}
+
+const parseConvictionValue = (conviction: Conviction) => {
+  const _conviction = conviction.toString()
+  if (_conviction.includes('0.1x')) {
+    return 0
+  }
+
+  return Number(_conviction.replaceAll(/locked|x/gi, ''))
 }
 
 const VoteRefrendum = ({
@@ -51,7 +72,9 @@ const VoteRefrendum = ({
     message: ''
   })
   const [selectedDelegatee, setSelectedDelegatee] = useState<Delegatee>(DELEGATEES[0])
+  const [useDelegation, setUseDelegation] = useState<boolean>(false)
   const [delegated, setDelegated] = useState<boolean>(false)
+  const [accountsDelegations, setAccountsDelegations] = useState<AccountDelegationMap>({})
 
   const CONVICTIONS: [number, number][] = [1, 2, 4, 8, 16, 32].map((lock, index) => [
     index + 1,
@@ -68,13 +91,77 @@ const VoteRefrendum = ({
     ],
     [CONVICTIONS]
   )
+
   const [conviction, setConviction] = useState<number>(convictionOpts[1].value)
+
+  // Generate delegation status map for each account ID
+  useEffect(() => {
+    if (!api || !apiReady || accounts.length === 0) {
+      return
+    }
+
+    ;(async () => {
+      setLoadingStatus({ isLoading: true, message: 'Get delegation status' })
+
+      const votingOfCalls = accounts.reduce<Promise<any>[]>((memo, account) => {
+        memo.push(api.query.democracy.votingOf(account.address))
+        return memo
+      }, [])
+
+      const votingOfResults = await Promise.all(votingOfCalls)
+      const votingOf = votingOfResults.reduce<AccountDelegationMap>((memo, result, i) => {
+        const resultJson = result.toJSON()
+        const isDelegating = !!resultJson.delegating
+        return {
+          ...memo,
+          [accounts[i].address]: { isDelegating, ...result.toJSON() }
+        }
+      }, {})
+
+      setAccountsDelegations(votingOf)
+
+      setLoadingStatus({ isLoading: false, message: '' })
+    })()
+  }, [accounts, api, apiReady])
+
+  // Update form when address change
+  useEffect(() => {
+    if (isEmpty(accountsDelegations)) return
+
+    const { isDelegating, delegating } = accountsDelegations[address]
+    setUseDelegation(isDelegating)
+
+    if (isDelegating && delegating) {
+      const { conviction, target } = delegating
+
+      // console.log(conviction)
+      // console.log(parseConvictionValue(conviction))
+
+      // setLockedBalance(new BN(balance))
+      setConviction(parseConvictionValue(conviction))
+      setSelectedDelegatee(DELEGATEES.filter((d) => d.address === target.toString())[0])
+
+      setDelegated(true)
+    }
+  }, [accountsDelegations, address])
 
   const onConvictionChange = (
     event: React.SyntheticEvent<HTMLElement, Event>,
     data: DropdownProps
   ) => {
-    setConviction(Number(data.value))
+    const conviction = Number(data.value)
+    setConviction(conviction)
+
+    const { isDelegating, delegating } = accountsDelegations[address]
+    if (isDelegating && delegating) {
+      const _conviction = delegating.conviction
+      // console.log(conviction, parseConvictionValue(_conviction))
+      if (conviction !== parseConvictionValue(_conviction)) {
+        setDelegated(false)
+      } else {
+        setDelegated(true)
+      }
+    }
   }
 
   const onBalanceChange = (balance: BN) => setLockedBalance(balance)
@@ -170,7 +257,6 @@ const VoteRefrendum = ({
       })
   }
 
-  // TODO Finalize this function when Geode RPC endpoint has been ready to implement
   const voteReferendumUsingDelegation = async (aye: boolean) => {
     if (!referendumId && referendumId !== 0) {
       console.error('referendumId not set')
@@ -201,8 +287,8 @@ const VoteRefrendum = ({
         index: referendumId,
         sender
       }
-      console.log(JSON.stringify(voteMessage))
-      console.log(stringToHex(JSON.stringify(voteMessage)))
+      // console.log(JSON.stringify(voteMessage))
+      // console.log(stringToHex(JSON.stringify(voteMessage)))
 
       const rawVoteMessage = stringToHex(JSON.stringify(voteMessage))
 
@@ -234,9 +320,42 @@ const VoteRefrendum = ({
         }
 
         const response = await fetch(selectedDelegatee.url, requestOptions)
-        console.log('Geode Response', await response.json())
-      } catch (e) {
-        console.error('Geode Error', e)
+        const { result } = await response.json()
+
+        if (result === GeodeResponse.SUCCESS) {
+          queueNotification({
+            header: 'Success!',
+            message: `Vote using delegation on referendum #${referendumId} successful.`,
+            status: NotificationStatus.SUCCESS
+          })
+        } else {
+          if (result === GeodeResponse.INVALID_SENDER) {
+            throw new Error('Sender account is invalid.')
+          } else if (result === GeodeResponse.INVALID_SIGNATURE) {
+            throw new Error('Transaction cannot be verified due to invalid signature.')
+          } else if (result === GeodeResponse.INVALID_INDEX) {
+            throw new Error('Transaction cannot be processed due to invalid referendum index.')
+          } else if (result === GeodeResponse.INVALID_MESSAGE) {
+            throw new Error('Transaction cannot be processed due to malformed message.')
+          } else if (result === GeodeResponse.REFERENDUM_FINISHED) {
+            // eslint-disable-next-line max-len, prettier/prettier
+            throw new Error(`Transaction cannot be processed because referendum #${referendumId} is finished`)
+          } else if (result === GeodeResponse.DEADLINE_EXCEEDED) {
+            throw new Error('Transaction cannot be processed due to exceeded deadline')
+          } else if (result === GeodeResponse.NOT_DELEGATED) {
+            // eslint-disable-next-line max-len, prettier/prettier
+            throw new Error('Transaction cannot be processed due to delegated account is not available at this moment')
+          }
+
+          throw new Error('Transaction failed. Geode is facing a trouble now :(, try again later.')
+        }
+      } catch (error) {
+        console.error('Geode Error', error)
+        queueNotification({
+          header: 'Failed!',
+          message: error.message,
+          status: NotificationStatus.ERROR
+        })
       } finally {
         setLoadingStatus({ isLoading: false, message: '' })
       }
@@ -274,23 +393,22 @@ const VoteRefrendum = ({
 
   const noAccount = accounts.length === 0
 
-  const VoteLock = () => (
-    <Form.Field>
-      <label>
-        Vote lock
-        {/*eslint-disable-next-line max-len*/}
-        <HelperTooltip content="You can multiply your votes by locking your tokens for longer periods of time." />
-      </label>
-      <Select
-        onChange={onConvictionChange}
-        options={convictionOpts}
-        pointing={'top'}
-        value={conviction}
-      />
-    </Form.Field>
-  )
-
-  const [useDelegation, setUseDelegation] = useState<boolean>(false)
+  // const VoteLock = () => (
+  //   <Form.Field>
+  //     <label>
+  //       Vote lock
+  //       {/*eslint-disable-next-line max-len*/}
+  // eslint-disable-next-line max-len
+  //       <HelperTooltip content="You can multiply your votes by locking your tokens for longer periods of time." />
+  //     </label>
+  //     <Select
+  //       onChange={onConvictionChange}
+  //       options={convictionOpts}
+  //       pointing={'top'}
+  //       value={conviction}
+  //     />
+  //   </Form.Field>
+  // )
 
   const DelegationSwitch = () => (
     <Form.Field>
@@ -334,7 +452,21 @@ const VoteRefrendum = ({
             placeholder={'123'}
             onChange={onBalanceChange}
           />
-          <VoteLock />
+
+          <Form.Field>
+            <label>
+              Vote lock
+              {/*eslint-disable-next-line max-len*/}
+              <HelperTooltip content="You can multiply your votes by locking your tokens for longer periods of time." />
+            </label>
+            <Select
+              onChange={onConvictionChange}
+              options={convictionOpts}
+              pointing={'top'}
+              value={conviction}
+            />
+          </Form.Field>
+
           <DelegationSwitch />
           {useDelegation && (
             <DelegateeSelectionForm

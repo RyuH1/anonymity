@@ -146,6 +146,17 @@ export enum Vote {
   NAY = 'NAY'
 }
 
+export enum GeodeResponse {
+  SUCCESS = 'Success',
+  INVALID_SENDER = 'InvalidSender',
+  INVALID_SIGNATURE = 'InvalidSignature',
+  INVALID_INDEX = 'InvalidIndex',
+  INVALID_MESSAGE = 'InvalidMsg',
+  REFERENDUM_FINISHED = 'ReferendumFinished',
+  DEADLINE_EXCEEDED = 'DeadlineExceeded',
+  NOT_DELEGATED = 'NotDelegated'
+}
+
 export interface CouncilVote {
   address: string
   vote: Vote
