@@ -10,7 +10,7 @@ export const network = {
 }
 
 export const tokenSymbol = {
-  DOT: 'DOT',
+  DOT: 'ANM',
   KSM: 'KSM'
 }
 
