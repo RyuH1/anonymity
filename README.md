@@ -16,29 +16,6 @@ The Geode code runs entirely in an Intel SGX enclave, ensuring that the voting p
 ## Install
 Instructions on how to run the chain and front-end code are in their respective folders.
 
-## Deployments
-
-### Demo Chain
-#### Docker Image
-`ryuh1/anonymity:v0.1.1`
-#### Endpoints
-| Name | Value |
-| -- | -- |
-| Dashboard | [Polkadot.js](https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fhackathon-api.ata.network#/explorer) |
-| HTTP RPC Endpoint | https://hackathon-rpc.ata.network |
-| Websockets RPC Endpoint | wss://hackathon-api.ata.network |
-#### Run as full node
-##### Install Dependencies
-- Install Docker
-- Please go to this [link](https://docs.docker.com/get-docker/) to download the docker engine for your Operating System accordingly.
-##### Run the docker image
-```bash
-docker run -it -d -p 30333:30333 -p 9933:9933 -p 9944:9944 ryuh1/anonymity:v0.1.1 --base-path /chain-data --chain local --port 30333 --ws-port 9944 --rpc-port 9933 --bootnodes /ip4/20.99.225.95/tcp/30335/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
-```
-
-### Frontend
-<https://automata-network.github.io/polkadot-hackathon/>
-
 ## Future Work:
 1. Currently, the Geode pays the fee for submitting the vote extrinsic. In the future, we could deduct part of this fee from the locked balance of all the accounts that delegated the Geode. We could also deduct a fee for Geode maintenance.
 2. Because we want to maintain the privacy of voting, we are unable to store the voting data outside the enclave, i.e., we cannot back it up. To enable backup, we could run a secondary Geode synchronized with the primary Geode. Communications between the two would only be decrypted inside the Intel SGX enclave to ensure privacy.
